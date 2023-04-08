@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type Room from "@/interfaces/Room";
-import RoomItem from "@/components/atoms/RoomItem.vue";
-import Warning from "@/components/icons/Warning.vue";
-import Button from "@/components/atoms/Button.vue";
-import PulseLoader from "@/components/atoms/PulseLoader.vue";
+import RoomItem from "@/components/RoomItem/RoomItem.vue";
+import Warning from "@/components/icons/WarningIcon.vue";
+import PulseLoader from "@/components/PulseLoader/PulseLoader.vue";
+import Button from "@/components/Button/Button.vue";
 
 defineProps<{
   roomList: Room[],

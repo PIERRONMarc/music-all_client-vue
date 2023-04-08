@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import OnlineMedia from "@/components/icons/OnlineMedia.vue";
-import Button from "@/components/atoms/Button.vue";
+import OnlineMedia from "@/components/icons/OnlineMediaIcon.vue";
+import Button from "@/components/Button/Button.vue";
 </script>
 
 <template>

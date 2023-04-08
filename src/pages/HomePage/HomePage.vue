@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import HomeTemplate from "@/components/templates/HomeTemplate.vue";
-import Hero from "@/components/molecules/Hero.vue";
-import Mello from "@/components/icons/Mello.vue";
-import RoomList from "@/components/molecules/RoomList.vue";
+import HomeTemplate from "@/pages/HomePage/HomeTemplate/HomeTemplate.vue";
+import Hero from "@/components/Hero/Hero.vue";
+import Mello from "@/components/icons/MelloIcon.vue";
+import RoomList from "@/components/RoomList/RoomList.vue";
 import type Room from "@/interfaces/Room";
 import {onMounted, ref} from "vue";
 import RoomService from "@/services/Api/RoomService";
