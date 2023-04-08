@@ -12,6 +12,7 @@
   "dependencies": {
     "@fontsource/montserrat": "^4.5.13",
     "@fontsource/roboto": "^4.5.8",
+    "axios": "^1.2.3",
     "vue": "^3.2.45"
   },
   "devDependencies": {
