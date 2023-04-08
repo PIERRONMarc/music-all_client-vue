@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import SupervisorAccount from "@/components/icons/SupervisorAccount.vue";
-import Join from "@/components/icons/Join.vue";
+import SupervisorAccount from "@/components/icons/SupervisorAccountIcon.vue";
+import Join from "@/components/icons/JoinIcon.vue";
 
 defineProps<{
   roomName: string
