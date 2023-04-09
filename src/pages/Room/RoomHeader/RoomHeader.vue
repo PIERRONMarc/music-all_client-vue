@@ -3,8 +3,8 @@
       <RoomHeaderItem title="Home" path="/" :icon-component="HomeIcon"/>
       <RoomHeaderItem title="Room" path="/room" :icon-component="MusicNoteIcon" is-active/>
       <div class="ml-auto">
-          <Button :on-click="onClick" rounded :color="showGuests ? '' : '#FFFFFF'">
-              <PeopleIcon :class="showGuests ? 'fill-white': 'fill-black'"/>
+          <Button :on-click="onClick" rounded :color="showGuestList ? '' : '#FFFFFF'">
+              <PeopleIcon :class="showGuestList ? 'fill-white': 'fill-black'"/>
           </Button>
       </div>
   </div>
@@ -18,9 +18,11 @@ import Button from "@/components/Button/Button.vue";
 import PeopleIcon from "@/components/icons/PeopleIcon.vue";
 import {ref} from "vue";
 
-const showGuests = ref(false);
+const emit = defineEmits(["toggleGuestList"]);
+const showGuestList = ref(false);
 
 const onClick = () => {
-    showGuests.value = !showGuests.value
+    showGuestList.value = !showGuestList.value;
+    emit("toggleGuestList");
 }
 </script>
