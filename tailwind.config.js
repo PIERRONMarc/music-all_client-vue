@@ -11,7 +11,8 @@ module.exports = {
             'primary-color': '#F74539',
             'primary-dark-color': '#bc0010',
             'text-color': '#FFFFFF',
-            'bg-light-color': '#2F2F2F'
+            'bg-light-color': '#2F2F2F',
+            'bg-alternative': '#23232D'
         },
         backgroundImage: {
             'treble-clef-background': "url('src/assets/icons/treble-clef-background.svg')",

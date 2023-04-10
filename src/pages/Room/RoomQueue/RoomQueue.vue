@@ -1,5 +1,8 @@
 <template>
     <h1 class="font-montserrat text-2xl mb-8">Queue</h1>
+    <div class="mb-8">
+        <YoutubeSearch />
+    </div>
     <SongItem
         v-if="songs.length > 0"
         v-for="(song, index) in songs"
@@ -18,6 +21,7 @@
 <script setup lang="ts">
 import SongItem from "@/pages/Room/RoomQueue/SongItem/SongItem.vue";
 import ComposeMusicIcon from "@/components/icons/ComposeMusicIcon.vue";
+import YoutubeSearch from "@/pages/Room/RoomQueue/YoutubeSearch/YoutubeSearch.vue";
 
 interface Song {
     url: string,
