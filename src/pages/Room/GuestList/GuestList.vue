@@ -1,5 +1,5 @@
 <template>
-    <div v-if="showGuestList" class="h-full bg-bg-light-color pt-12 px-6 absolute w-5/6 right-0 z-10">
+    <div v-if="showGuestList" class="h-full bg-bg-light-color pt-12 px-6 absolute w-5/6 right-0 z-30">
         <div
             v-for="(guest, index) in guests"
             :key="index"

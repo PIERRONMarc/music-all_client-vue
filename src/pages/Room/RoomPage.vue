@@ -10,6 +10,9 @@
           <template v-slot:roomQueue>
               <RoomQueue />
           </template>
+          <template v-slot:roomPlayer>
+              <RoomPlayer />
+          </template>
       </RoomTemplate>
   </div>
 
@@ -21,6 +24,7 @@ import RoomHeader from "@/pages/Room/RoomHeader/RoomHeader.vue";
 import GuestList from "@/pages/Room/GuestList/GuestList.vue";
 import {ref} from "vue";
 import RoomQueue from "@/pages/Room/RoomQueue/RoomQueue.vue";
+import RoomPlayer from "@/pages/Room/RoomPlayer/RoomPlayer.vue";
 
 const showGuestList = ref(false);
 

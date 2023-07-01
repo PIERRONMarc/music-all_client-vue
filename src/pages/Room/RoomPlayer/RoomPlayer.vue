@@ -1,0 +1,63 @@
+<template>
+  <div>
+    <div class="fixed bottom-0 w-full bg-bg-light-color h-20 flex flex-row">
+      <div class="flex flex-row items-center w-full gap-4 px-8 md:pr-0">
+        <div class="flex flex-row items-center gap-2">
+          <SoundIcon class="fill-white w-4 h-4"/>
+          <PlayIcon v-if="!isPaused" class="fill-white w-10 h-10" @click="togglePause"/>
+          <PauseCircleFilledIcon v-else class="fill-white w-10 h-10" @click="togglePause"/>
+          <SkipNextIcon class="w-3 h-3 fill-white"/>
+        </div>
+        <div class="flex flex-col overflow-hidden">
+          <div class="truncate font-bold">
+            {{ song.name }}
+          </div>
+          <div class="truncate text-sm">
+            {{ song.author }}
+          </div>
+        </div>
+        <iframe
+            class="absolute md:static right-0 -bottom-96 md:h-[204px] md:w-[345px] md:self-end md:ml-auto" src="https://www.youtube.com/embed/Tppn5RsEK78"
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+        >
+        </iframe>
+      </div>
+    </div>
+    <div class="w-full border-b fixed bottom-0 border-[#BEBEC7] z-0"></div>
+    <div class="w-1/2 border-b fixed bottom-0 border-primary-color z-10"></div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import PlayIcon from "@/components/icons/PlayIcon.vue";
+import {ref} from "vue";
+import PauseCircleFilledIcon from "@/components/icons/PauseCircleFilledIcon.vue";
+import SkipNextIcon from "@/components/icons/SkipNextIcon.vue";
+import SoundIcon from "@/components/icons/SoundIcon.vue";
+
+interface Song {
+  name: string,
+  author: string,
+  lengthInSeconds: number,
+  isPaused: boolean
+}
+
+const song: Song = {
+  name: "Little Wing",
+  author: "Jimmy Hendrix",
+  lengthInSeconds: 145,
+  isPaused: false
+}
+
+const isPaused = ref(false);
+
+const togglePause = () => {
+  isPaused.value = !isPaused.value;
+}
+</script>
+
+<style scoped>
+
+</style>
