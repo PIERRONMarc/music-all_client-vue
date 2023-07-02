@@ -16,9 +16,7 @@ async function getRooms() {
   roomListIsLoading.value = true
 
   try {
-    await new Promise(r => setTimeout(r, 500));
-    const data = await RoomService.getAll(0);
-    roomList.value.push(...data.rooms);
+    roomList.value = await RoomService.getAll(0)
     roomListIsLoading.value = false
   } catch (e) {
     hasRoomListFailedWhileLoading.value = true
