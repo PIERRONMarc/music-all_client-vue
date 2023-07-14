@@ -1,9 +1,9 @@
 import HttpClient from "./HttpClient";
-import type Room from "@/interfaces/Room";
+import type {RoomPreview} from "@/types";
 
 class RoomService
 {
-    static async getAll(page = 1): Promise<Room[]>
+    static async getAll(page = 1): Promise<RoomPreview[]>
     {
         const response = await HttpClient.get('/room', {page: page});
 

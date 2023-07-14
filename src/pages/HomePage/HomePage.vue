@@ -3,11 +3,11 @@ import HomeTemplate from "@/pages/HomePage/HomeTemplate/HomeTemplate.vue";
 import Hero from "@/components/Hero/Hero.vue";
 import Mello from "@/components/icons/MelloIcon.vue";
 import RoomList from "@/components/RoomList/RoomList.vue";
-import type Room from "@/interfaces/Room";
 import {onMounted, ref} from "vue";
 import RoomService from "@/services/Api/RoomService";
+import type {RoomPreview} from "@/types";
 
-const roomList = ref<Room[]>([])
+const roomList = ref<RoomPreview[]>([])
 const roomListIsLoading = ref<boolean>(true)
 const hasRoomListFailedWhileLoading = ref<boolean>(false)
 

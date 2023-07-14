@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type Room from "@/interfaces/Room";
 import RoomItem from "@/components/RoomItem/RoomItem.vue";
 import Warning from "@/components/icons/WarningIcon.vue";
 import PulseLoader from "@/components/PulseLoader/PulseLoader.vue";
 import Button from "@/components/Button/Button.vue";
+import type {RoomPreview} from "@/types";
 
 defineProps<{
-  roomList: Room[],
+  roomList: RoomPreview[],
   hasFailedWhileLoading: boolean
   isLoading?: boolean,
   onRetry?: () => any
