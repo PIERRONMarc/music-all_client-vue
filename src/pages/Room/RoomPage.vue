@@ -1,21 +1,20 @@
 <template>
   <div>
-      <RoomTemplate>
-          <template v-slot:roomHeader>
-              <RoomHeader @toggleGuestList="toggleGuestList" />
-          </template>
-          <template v-slot:guestList>
-              <GuestList v-if="currentRoom" :show-guest-list="showGuestList" :guests="currentRoom.guests"/>
-          </template>
-          <template v-slot:roomQueue>
-              <RoomQueue />
-          </template>
-          <template v-slot:roomPlayer>
-              <RoomPlayer />
-          </template>
-      </RoomTemplate>
+    <RoomTemplate>
+      <template v-slot:roomHeader>
+        <RoomHeader @toggleGuestList="toggleGuestList" />
+      </template>
+      <template v-slot:guestList>
+        <GuestList v-if="currentRoom" :show-guest-list="showGuestList" :guests="currentRoom.guests"/>
+      </template>
+      <template v-slot:roomQueue>
+        <RoomQueue v-if="currentRoom" :songs="currentRoom.songs" :current-song="currentRoom.currentSong" />
+      </template>
+      <template v-slot:roomPlayer>
+        <RoomPlayer />
+      </template>
+    </RoomTemplate>
   </div>
-
 </template>
 
 <script setup lang="ts">
@@ -35,7 +34,6 @@ const joinRoom = async () => {
   try {
     const joinRoomResponse = await RoomService.join('da119633-9ee5-38c0-93a0-993049f6e6bf');
     currentRoom.value = joinRoomResponse.room;
-
   } catch (e) {
     console.error(e)
   }

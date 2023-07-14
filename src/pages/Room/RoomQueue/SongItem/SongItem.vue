@@ -39,18 +39,16 @@
 <script setup lang="ts">
 import AccessTime from "@/components/icons/AccessTimeIcon.vue";
 import HightlightOff from "@/components/icons/HightlightOffIcon.vue";
-import {computed} from "vue";
 import playingStatus from "@/assets/lotties/playing-status.json";
 import * as LottiePlayer from "@lottiefiles/lottie-player";
 
-const props = defineProps<{
+defineProps<{
     index: number,
     name: string,
     author: string,
     lengthInSeconds: number
+    isCurrentSong: boolean
 }>();
-
-const isCurrentSong = computed(() => props.index === 0);
 </script>
 
 <style scoped>

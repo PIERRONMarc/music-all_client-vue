@@ -4,16 +4,25 @@
         <YoutubeSearch />
     </div>
     <SongItem
+        v-if="currentSong"
+        :index="1"
+        :name="currentSong.name"
+        :author="currentSong.author"
+        :length-in-seconds="currentSong.lengthInSeconds"
+        :is-current-song="true"
+    />
+    <SongItem
         v-if="songs.length > 0"
         v-for="(song, index) in songs"
-        :key="index"
+        :key="index + 1"
         :index="index"
         :name="song.name"
         :author="song.author"
         :length-in-seconds="song.lengthInSeconds"
+        :is-current-song="false"
     />
-    <div v-else class="h-full flex flex-col justify-center items-center">
-        <ComposeMusicIcon class="w-3/5 h-auto" />
+    <div v-if="!currentSong && songs.length === 0" class="h-full flex flex-col justify-center items-center">
+        <ComposeMusicIcon class="w-3/5 sm:max-w-[300px] h-auto" />
         <p class="mt-14 mb-3.5 text-base">Add some songs to the queue !</p>
     </div>
 </template>
@@ -22,27 +31,10 @@
 import SongItem from "@/pages/Room/RoomQueue/SongItem/SongItem.vue";
 import ComposeMusicIcon from "@/components/icons/ComposeMusicIcon.vue";
 import YoutubeSearch from "@/pages/Room/RoomQueue/YoutubeSearch/YoutubeSearch.vue";
+import type {Song} from "@/types";
 
-interface Song {
-    url: string,
-    isPause: boolean,
-    name: string,
-    author: string,
-    lengthInSeconds: number
-}
-
-const songs: Song[] = [{
-    url: "https://www.youtube.com/watch?v=ZUrPZmWBbPQ&ab_channel=JimiHendrix-Topic",
-    isPause: false,
-    name: "Little Wing",
-    author: "Jimmy Hendrix",
-    lengthInSeconds: 145
-}, {
-    url: "https://www.youtube.com/watch?v=ayuooyWPEUc&ab_channel=RoadrunnerRecords",
-    isPause: false,
-    name: "The Wombats - Let's Dance To Joy Division [OFFICIAL VIDEO]",
-    author: "Roadrunner Records",
-    lengthInSeconds: 195
-}]
-
+defineProps<{
+  songs: Song[],
+  currentSong: Song|null,
+}>()
 </script>

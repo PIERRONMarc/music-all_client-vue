@@ -8,7 +8,11 @@ export interface Room {
 }
 
 export interface Song {
-
+    url: string,
+    isPause: boolean,
+    name: string,
+    author: string,
+    lengthInSeconds: number
 }
 
 export enum GuestRoles {
