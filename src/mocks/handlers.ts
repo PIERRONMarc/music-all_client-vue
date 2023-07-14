@@ -1,7 +1,7 @@
 import { rest } from 'msw'
 
 export const handlers = [
-    rest.get(import.meta.env.REACT_APP_API_BASE_URL + '/room', (req, res, ctx) => {
+    rest.get(import.meta.env.VITE_API_BASE_URL + '/room', (req, res, ctx) => {
         return res(
             ctx.status(200),
             ctx.json([{

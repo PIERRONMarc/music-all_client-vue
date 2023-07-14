@@ -19,7 +19,7 @@ class HttpClient {
         queryParams?: {[key: string]: any}
     ): Promise<AxiosResponse>  {
         const data = body ? body : {}
-        const url = import.meta.env.VUE_APP_API_BASE_URL + route + HttpClient.mapQueryParams(queryParams)
+        const url = import.meta.env.VITE_API_BASE_URL + route + HttpClient.mapQueryParams(queryParams)
         const requestObj = { url, headers: HttpClient.headers, method, data }
 
         try {
