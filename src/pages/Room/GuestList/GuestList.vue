@@ -1,5 +1,5 @@
 <template>
-    <div v-if="showGuestList" class="h-full bg-bg-light-color pt-12 px-6 absolute w-5/6 right-0 z-30">
+    <div v-if="showGuestList" class="h-full bg-bg-light-color pt-12 px-6 absolute w-5/6 right-0 z-30 overflow-scroll">
         <div
             v-for="(guest, index) in guests"
             :key="index"
@@ -17,24 +17,10 @@
 
 <script setup lang="ts">
 import CdIcon from "@/components/icons/CdIcon.vue";
+import type {Guest} from "@/types";
 
 defineProps<{
-    showGuestList: boolean
+    showGuestList: boolean,
+    guests: Guest[],
 }>()
-
-interface Guest {
-    name: string,
-    role: "ADMIN" | "GUEST"
-}
-
-const guests: Guest[] = [{
-    name: "Oovaald",
-    role: "ADMIN"
-}, {
-    name: "Angox",
-    role: "GUEST"
-}, {
-    name: "Kaktus",
-    role: "GUEST"
-}];
 </script>

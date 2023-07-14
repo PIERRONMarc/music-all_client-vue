@@ -5,7 +5,7 @@
               <RoomHeader @toggleGuestList="toggleGuestList" />
           </template>
           <template v-slot:guestList>
-              <GuestList :show-guest-list="showGuestList" />
+              <GuestList v-if="currentRoom" :show-guest-list="showGuestList" :guests="currentRoom.guests"/>
           </template>
           <template v-slot:roomQueue>
               <RoomQueue />
