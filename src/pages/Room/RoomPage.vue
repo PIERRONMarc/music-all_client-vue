@@ -1,6 +1,9 @@
 <template>
   <div>
     <RoomTemplate>
+      <template v-slot:loader>
+        <PulseLoader v-if="isCurrentRoomLoading" />
+      </template>
       <template v-slot:roomHeader>
         <RoomHeader @toggleGuestList="toggleGuestList" />
       </template>
@@ -26,9 +29,11 @@ import RoomQueue from "@/pages/Room/RoomQueue/RoomQueue.vue";
 import RoomPlayer from "@/pages/Room/RoomPlayer/RoomPlayer.vue";
 import RoomService from "@/services/Api/RoomService";
 import type {Room} from "@/types";
+import PulseLoader from "@/components/PulseLoader/PulseLoader.vue";
 
 const showGuestList = ref<boolean>(false);
 const currentRoom = ref<Room|null>(null);
+const isCurrentRoomLoading = ref<boolean>(true);
 
 const joinRoom = async () => {
   try {
@@ -37,6 +42,7 @@ const joinRoom = async () => {
   } catch (e) {
     console.error(e)
   }
+  isCurrentRoomLoading.value = false;
 }
 
 joinRoom();
