@@ -24,7 +24,7 @@ defineProps<{
   </div>
   <div v-else>
     <h2 class="font-montserrat text-4xl my-7">Join a room</h2>
-    <RoomItem v-for="room in roomList" :room-name="room.name"></RoomItem>
+    <RoomItem v-for="room in roomList" :room-name="room.name" :room-id="room.id" />
   </div>
 </template>
 
