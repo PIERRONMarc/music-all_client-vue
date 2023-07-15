@@ -10,10 +10,10 @@
         </div>
         <div class="flex flex-col overflow-hidden">
           <div class="truncate font-bold">
-            {{ song.name }}
+            {{ currentSong ? currentSong.title : '-' }}
           </div>
           <div class="truncate text-sm">
-            {{ song.author }}
+            {{ currentSong ? currentSong.author : '-' }}
           </div>
         </div>
         <iframe
@@ -36,20 +36,11 @@ import {ref} from "vue";
 import PauseCircleFilledIcon from "@/components/icons/PauseCircleFilledIcon.vue";
 import SkipNextIcon from "@/components/icons/SkipNextIcon.vue";
 import SoundIcon from "@/components/icons/SoundIcon.vue";
+import type {Song} from "@/types";
 
-interface Song {
-  name: string,
-  author: string,
-  lengthInSeconds: number,
-  isPaused: boolean
-}
-
-const song: Song = {
-  name: "Little Wing",
-  author: "Jimmy Hendrix",
-  lengthInSeconds: 145,
-  isPaused: false
-}
+const props = defineProps<{
+  currentSong: Song|null
+}>();
 
 const isPaused = ref(false);
 

@@ -18,7 +18,7 @@
             </div>
             <div class="flex flex-col overflow-hidden">
                 <div class="truncate font-bold">
-                    {{ name }}
+                    {{ title }}
                 </div>
                 <div class="truncate text-sm">
                     {{ author }}
@@ -44,7 +44,7 @@ import * as LottiePlayer from "@lottiefiles/lottie-player";
 
 defineProps<{
     index: number,
-    name: string,
+    title: string,
     author: string,
     lengthInSeconds: number
     isCurrentSong: boolean

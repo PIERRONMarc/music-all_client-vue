@@ -11,7 +11,7 @@
         <RoomQueue v-if="currentRoom" :songs="currentRoom.songs" :current-song="currentRoom.currentSong" />
       </template>
       <template v-slot:roomPlayer>
-        <RoomPlayer />
+        <RoomPlayer v-if="currentRoom" :current-song="currentRoom.currentSong" />
       </template>
     </RoomTemplate>
   </div>

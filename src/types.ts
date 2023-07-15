@@ -10,7 +10,7 @@ export interface Room {
 export interface Song {
     url: string,
     isPause: boolean,
-    name: string,
+    title: string,
     author: string,
     lengthInSeconds: number
 }

@@ -6,7 +6,7 @@
     <SongItem
         v-if="currentSong"
         :index="1"
-        :name="currentSong.name"
+        :title="currentSong.title"
         :author="currentSong.author"
         :length-in-seconds="currentSong.lengthInSeconds"
         :is-current-song="true"
@@ -16,7 +16,7 @@
         v-for="(song, index) in songs"
         :key="index + 1"
         :index="index"
-        :name="song.name"
+        :title="song.title"
         :author="song.author"
         :length-in-seconds="song.lengthInSeconds"
         :is-current-song="false"
