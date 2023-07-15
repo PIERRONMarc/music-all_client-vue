@@ -1,5 +1,5 @@
 import HttpClient from "./HttpClient";
-import type {JoinRoomResponse, RoomPreview} from "@/types";
+import type {CreateRoomResponse, JoinRoomResponse, RoomPreview} from "@/types";
 
 class RoomService
 {
@@ -13,6 +13,13 @@ class RoomService
     static async join(roomId: string): Promise<JoinRoomResponse>
     {
         const response = await HttpClient.get('/join/'+roomId);
+
+        return response.data;
+    }
+
+    static async create(): Promise<CreateRoomResponse>
+    {
+        const response = await HttpClient.post('/room');
 
         return response.data;
     }

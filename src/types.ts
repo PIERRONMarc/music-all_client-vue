@@ -33,3 +33,7 @@ export interface JoinRoomResponse {
     room: Room,
     guest: Guest,
 }
+
+export interface CreateRoomResponse extends Room {
+    host: Guest,
+}

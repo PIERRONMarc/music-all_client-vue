@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import OnlineMedia from "@/components/icons/OnlineMediaIcon.vue";
 import Button from "@/components/Button/Button.vue";
+
+defineProps<{
+  onCreateRoom: Function
+}>();
 </script>
 
 <template>
@@ -10,7 +14,7 @@ import Button from "@/components/Button/Button.vue";
       <p class="text-base m-0 mb-10 w-full md:w-3/4">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam pharetra ut purus et blandit. Proin sit amet justo vulputate, dictum enim non, finibus lacus.
       </p>
-      <Button>Create my room</Button>
+      <Button :on-click="onCreateRoom">Create my room</Button>
     </div>
     <OnlineMedia class="hidden min-[992px]:block -right-24 relative" />
   </div>
