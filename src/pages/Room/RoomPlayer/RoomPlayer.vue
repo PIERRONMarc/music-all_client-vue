@@ -8,12 +8,12 @@
           <PauseCircleFilledIcon v-else class="fill-white w-10 h-10" @click="togglePause"/>
           <SkipNextIcon class="w-3 h-3 fill-white"/>
         </div>
-        <div class="flex flex-col overflow-hidden">
+        <div v-if="currentSong" class="flex flex-col overflow-hidden">
           <div class="truncate font-bold">
-            {{ currentSong ? currentSong.title : '-' }}
+            {{ currentSong.title }}
           </div>
           <div class="truncate text-sm">
-            {{ currentSong ? currentSong.author : '-' }}
+            {{ currentSong.author }}
           </div>
         </div>
         <iframe
@@ -32,17 +32,17 @@
 
 <script setup lang="ts">
 import PlayIcon from "@/components/icons/PlayIcon.vue";
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import PauseCircleFilledIcon from "@/components/icons/PauseCircleFilledIcon.vue";
 import SkipNextIcon from "@/components/icons/SkipNextIcon.vue";
 import SoundIcon from "@/components/icons/SoundIcon.vue";
-import type {Song} from "@/types";
-
-const props = defineProps<{
-  currentSong: Song|null
-}>();
+import {useRoomStore} from "@/stores/room";
+import {storeToRefs} from "pinia";
 
 const isPaused = ref(false);
+const roomStore = useRoomStore();
+const { currentRoom } = storeToRefs(roomStore);
+const currentSong = computed(() => currentRoom.value?.currentSong);
 
 const togglePause = () => {
   isPaused.value = !isPaused.value;

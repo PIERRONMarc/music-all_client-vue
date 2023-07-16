@@ -4,16 +4,16 @@
         <YoutubeSearch />
     </div>
     <SongItem
-        v-if="currentSong"
+        v-if="currentRoom && currentRoom.currentSong"
         :index="1"
-        :title="currentSong.title"
-        :author="currentSong.author"
-        :length-in-seconds="currentSong.lengthInSeconds"
+        :title="currentRoom.currentSong.title"
+        :author="currentRoom.currentSong.author"
+        :length-in-seconds="currentRoom.currentSong.lengthInSeconds"
         :is-current-song="true"
     />
     <SongItem
-        v-if="songs.length > 0"
-        v-for="(song, index) in songs"
+        v-if="currentRoom && currentRoom.songs.length > 0"
+        v-for="(song, index) in currentRoom.songs"
         :key="index + 1"
         :index="index"
         :title="song.title"
@@ -21,7 +21,7 @@
         :length-in-seconds="song.lengthInSeconds"
         :is-current-song="false"
     />
-    <div v-if="!currentSong && songs.length === 0" class="h-full flex flex-col justify-center items-center">
+    <div v-if="currentRoom && !currentRoom.currentSong && currentRoom.songs.length === 0" class="h-full flex flex-col justify-center items-center">
         <ComposeMusicIcon class="w-3/5 sm:max-w-[300px] h-auto" />
         <p class="mt-14 mb-3.5 text-base">Add some songs to the queue !</p>
     </div>
@@ -31,10 +31,9 @@
 import SongItem from "@/pages/Room/RoomQueue/SongItem/SongItem.vue";
 import ComposeMusicIcon from "@/components/icons/ComposeMusicIcon.vue";
 import YoutubeSearch from "@/pages/Room/RoomQueue/YoutubeSearch/YoutubeSearch.vue";
-import type {Song} from "@/types";
+import {useRoomStore} from "@/stores/room";
+import {storeToRefs} from "pinia";
 
-defineProps<{
-  songs: Song[],
-  currentSong: Song|null,
-}>()
+const roomStore = useRoomStore();
+const { currentRoom } = storeToRefs(roomStore);
 </script>

@@ -17,12 +17,13 @@ import RoomHeaderItem from "@/pages/Room/RoomHeader/RoomHeaderItem/RoomHeaderIte
 import Button from "@/components/Button/Button.vue";
 import PeopleIcon from "@/components/icons/PeopleIcon.vue";
 import {computed, ref} from "vue";
+import {useRoomStore} from "@/stores/room";
+import {storeToRefs} from "pinia";
 
-const props = defineProps<{
-  currentRoomName: string|null,
-}>()
+const roomStore = useRoomStore();
+const { currentRoom } = storeToRefs(roomStore);
 
-const currentRoomName = computed(() => 'Room' + (props.currentRoomName ? '/' + props.currentRoomName : ''));
+const currentRoomName = computed(() => 'Room' + (currentRoom.value ? '/' + currentRoom.value.name : ''));
 const emit = defineEmits(["toggleGuestList"]);
 const showGuestList = ref(false);
 

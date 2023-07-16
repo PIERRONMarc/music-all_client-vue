@@ -5,16 +5,16 @@
         <PulseLoader v-if="isCurrentRoomLoading" />
       </template>
       <template v-slot:roomHeader>
-        <RoomHeader @toggleGuestList="toggleGuestList" :current-room-name="currentRoom ? currentRoom.name : null" />
+        <RoomHeader @toggleGuestList="toggleGuestList" />
       </template>
       <template v-slot:guestList>
-        <GuestList v-if="currentRoom" :show-guest-list="showGuestList" :guests="currentRoom.guests"/>
+        <GuestList :show-guest-list="showGuestList" />
       </template>
       <template v-slot:roomQueue>
-        <RoomQueue v-if="currentRoom" :songs="currentRoom.songs" :current-song="currentRoom.currentSong" />
+        <RoomQueue />
       </template>
       <template v-slot:roomPlayer>
-        <RoomPlayer v-if="currentRoom" :current-song="currentRoom.currentSong" />
+        <RoomPlayer />
       </template>
     </RoomTemplate>
   </div>
@@ -28,13 +28,15 @@ import {ref} from "vue";
 import RoomQueue from "@/pages/Room/RoomQueue/RoomQueue.vue";
 import RoomPlayer from "@/pages/Room/RoomPlayer/RoomPlayer.vue";
 import RoomService from "@/services/Api/RoomService";
-import type {Room} from "@/types";
 import PulseLoader from "@/components/PulseLoader/PulseLoader.vue";
 import router from "@/router";
+import {useRoomStore} from "@/stores/room";
+import {storeToRefs} from "pinia";
 
 const showGuestList = ref<boolean>(false);
-const currentRoom = ref<Room|null>(null);
 const isCurrentRoomLoading = ref<boolean>(true);
+const roomStore = useRoomStore();
+const { currentRoom } = storeToRefs(roomStore);
 
 const joinRoom = async () => {
   try {
