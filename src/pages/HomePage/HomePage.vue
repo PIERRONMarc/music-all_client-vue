@@ -7,10 +7,14 @@ import {onMounted, ref} from "vue";
 import RoomService from "@/services/Api/RoomService";
 import type {RoomPreview} from "@/types";
 import router from "@/router";
+import {useRoomStore} from "@/stores/room";
+import {storeToRefs} from "pinia";
 
 const roomList = ref<RoomPreview[]>([])
 const roomListIsLoading = ref<boolean>(true)
 const hasRoomListFailedWhileLoading = ref<boolean>(false)
+const roomStore = useRoomStore();
+const { currentRoom, currentGuest } = storeToRefs(roomStore);
 
 async function getRooms() {
   hasRoomListFailedWhileLoading.value = false
@@ -28,6 +32,8 @@ async function getRooms() {
 async function createRoom() {
   try {
     const createRoomResponse = await RoomService.create();
+    currentRoom.value = createRoomResponse;
+    currentGuest.value = createRoomResponse.host;
     await router.push({name: 'room', params: {id: createRoomResponse.id}})
   } catch (e) {
     console.error(e)

@@ -36,19 +36,26 @@ import {storeToRefs} from "pinia";
 const showGuestList = ref<boolean>(false);
 const isCurrentRoomLoading = ref<boolean>(true);
 const roomStore = useRoomStore();
-const { currentRoom } = storeToRefs(roomStore);
+const { currentRoom, currentGuest } = storeToRefs(roomStore);
 
 const joinRoom = async () => {
   try {
     const joinRoomResponse = await RoomService.join(router.currentRoute.value.params.id as string);
     currentRoom.value = joinRoomResponse.room;
+    currentGuest.value = joinRoomResponse.guest;
   } catch (e) {
     console.error(e)
   }
   isCurrentRoomLoading.value = false;
 }
 
-joinRoom();
+const shouldJoinRoom = !currentRoom.value || (currentRoom.value && currentRoom.value.id !== router.currentRoute.value.params.id as string);
+
+if (shouldJoinRoom) {
+  joinRoom();
+} else {
+  isCurrentRoomLoading.value = false;
+}
 
 const toggleGuestList = () => {
     showGuestList.value = !showGuestList.value;
