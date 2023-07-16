@@ -49,19 +49,19 @@ class HttpClient {
     }
 
     public static async put(route: string, body?: {[key: string]: any}, queryParams?: {[key: string]: any}) {
-        return await HttpClient.request('PUT', route, queryParams, body)
+        return await HttpClient.request('PUT', route, body, queryParams)
     }
 
     public static async post(route: string, body?: {[key: string]: any}, queryParams?: {[key: string]: any}) {
-        return await HttpClient.request('POST', route, queryParams, body)
+        return await HttpClient.request('POST', route, body, queryParams)
     }
 
     public static async delete(route: string, queryParams?: {[key: string]: any}) {
-        return await HttpClient.request('POST', route, queryParams)
+        return await HttpClient.request('POST', route, undefined, queryParams)
     }
 
     public static async patch(route: string, body?: {[key: string]: any}, queryParams?: {[key: string]: any}) {
-        return await HttpClient.request('PATCH', route, queryParams, body)
+        return await HttpClient.request('PATCH', route, body, queryParams)
     }
 }
 
