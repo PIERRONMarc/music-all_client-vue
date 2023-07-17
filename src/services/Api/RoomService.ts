@@ -12,7 +12,7 @@ class RoomService
 
     static async join(roomId: string): Promise<JoinRoomResponse>
     {
-        const response = await HttpClient.get('/join/'+roomId);
+        const response = await HttpClient.get(`/join/${roomId}`);
 
         return response.data;
     }
@@ -22,6 +22,16 @@ class RoomService
         const response = await HttpClient.post('/room');
 
         return response.data;
+    }
+
+    static async addSong(url: string, roomId: string, token: string): Promise<void>
+    {
+        await HttpClient.post(
+            `/room/${roomId}/song`,
+            {url},
+            undefined,
+            {'Authorization': `Bearer ${token}`}
+        );
     }
 }
 

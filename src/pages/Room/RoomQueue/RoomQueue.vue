@@ -1,7 +1,7 @@
 <template>
     <h1 class="font-montserrat text-2xl mb-8">Queue</h1>
-    <div class="mb-8">
-        <YoutubeSearch />
+    <div class="mb-8" v-if="isCurrentGuestAdmin">
+        <YoutubeSearch :on-add-song="onAddSong" />
     </div>
     <SongItem
         v-if="currentRoom && currentRoom.currentSong"
@@ -13,7 +13,7 @@
     />
     <SongItem
         v-if="currentRoom && currentRoom.songs.length > 0"
-        v-for="(song, index) in currentRoom.songs"
+        v-for="(song, index) in currentRoom.songs.values()"
         :key="index + 1"
         :index="index"
         :title="song.title"
@@ -34,6 +34,10 @@ import YoutubeSearch from "@/pages/Room/RoomQueue/YoutubeSearch/YoutubeSearch.vu
 import {useRoomStore} from "@/stores/room";
 import {storeToRefs} from "pinia";
 
+defineProps<{
+  onAddSong: Function
+}>();
+
 const roomStore = useRoomStore();
-const { currentRoom } = storeToRefs(roomStore);
+const { currentRoom, isCurrentGuestAdmin } = storeToRefs(roomStore);
 </script>

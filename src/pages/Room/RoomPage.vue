@@ -11,7 +11,7 @@
         <GuestList :show-guest-list="showGuestList" />
       </template>
       <template v-slot:roomQueue>
-        <RoomQueue />
+        <RoomQueue :on-add-song="addSong" />
       </template>
       <template v-slot:roomPlayer>
         <RoomPlayer />
@@ -59,5 +59,9 @@ if (shouldJoinRoom) {
 
 const toggleGuestList = () => {
     showGuestList.value = !showGuestList.value;
+}
+
+const addSong = async (songUrl: string, roomId: string, token: string) => {
+  await RoomService.addSong(songUrl, roomId, token);
 }
 </script>
