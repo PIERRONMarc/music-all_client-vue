@@ -2,7 +2,7 @@ export interface Room {
     id: string,
     name: string,
     currentSong: Song | null,
-    guests: Guest[],
+    guests: GuestPreview[],
     host: Guest,
     songs: Song[]
 }
@@ -27,6 +27,8 @@ export interface Guest {
     token: string,
 }
 
+export type GuestPreview = Pick<Guest, 'name' | 'role'>;
+
 export type RoomPreview = Pick<Room, 'id' | 'name'>;
 
 export interface JoinRoomResponse {
@@ -37,3 +39,17 @@ export interface JoinRoomResponse {
 export interface CreateRoomResponse extends Room {
     host: Guest,
 }
+
+export enum MessageActions {
+    GuestJoin = 'guestJoin',
+}
+
+type MessageEventData<T extends MessageActions, K extends object> = {
+    action: T,
+    payload: K
+}
+
+export type GuestJoinMessage = MessageEventData<MessageActions.GuestJoin, {
+    name: string,
+    role: GuestRoles.Guest
+}>
