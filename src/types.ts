@@ -42,6 +42,7 @@ export interface CreateRoomResponse extends Room {
 
 export enum MessageActions {
     GuestJoin = 'guestJoin',
+    AddSong = 'addSong',
 }
 
 type MessageEventData<T extends MessageActions, K extends object> = {
@@ -52,4 +53,12 @@ type MessageEventData<T extends MessageActions, K extends object> = {
 export type GuestJoinMessage = MessageEventData<MessageActions.GuestJoin, {
     name: string,
     role: GuestRoles.Guest
+}>
+
+export type AddSongMessage = MessageEventData<MessageActions.AddSong, {
+    id: string;
+    url: string;
+    title: string;
+    author: string;
+    lengthInSeconds: string;
 }>

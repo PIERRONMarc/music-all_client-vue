@@ -32,7 +32,7 @@ import PulseLoader from "@/components/PulseLoader/PulseLoader.vue";
 import router from "@/router";
 import {useRoomStore} from "@/stores/room";
 import {storeToRefs} from "pinia";
-import type {GuestPreview, GuestJoinMessage} from "@/types";
+import type {GuestPreview, GuestJoinMessage, AddSongMessage} from "@/types";
 import {MessageActions} from "@/types";
 import {createRoomEventSource} from "@/services/Api/ServiceSentEventService";
 
@@ -71,6 +71,14 @@ const onGuestJoinMessage = (message: GuestJoinMessage) => {
   currentRoom.value?.guests.push(guest);
 }
 
+const onAddSongMessage = (message: AddSongMessage) => {
+  roomStore.addSong({
+    ...message.payload,
+    lengthInSeconds: parseInt(message.payload.lengthInSeconds),
+    isPause: true,
+  });
+}
+
 onMounted(async () => {
   if (shouldJoinRoom) {
     await joinRoom();
@@ -78,12 +86,13 @@ onMounted(async () => {
     isCurrentRoomLoading.value = false;
   }
 
-  if (currentRoom.value) {
-    roomEventSource.value = createRoomEventSource(currentRoom.value.id);
-    roomEventSource.value.onmessage = (event) => {
-      const messageData = JSON.parse(event.data);
-      if (messageData.action === MessageActions.GuestJoin) onGuestJoinMessage(event.data);
-    }
+  if (!currentRoom.value) return;
+
+  roomEventSource.value = createRoomEventSource(currentRoom.value.id);
+  roomEventSource.value.onmessage = (event) => {
+    const messageData = JSON.parse(event.data);
+    if (messageData.action === MessageActions.GuestJoin) onGuestJoinMessage(messageData);
+    if (messageData.action === MessageActions.AddSong) onAddSongMessage(messageData);
   }
 })
 
