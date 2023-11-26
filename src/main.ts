@@ -7,6 +7,7 @@ import './assets/main.css'
 import "@fontsource/roboto"
 import "@fontsource/montserrat"
 import {createPinia} from "pinia";
+import {createManager} from "@vue-youtube/core";
 
 if (import.meta.env.DEV) {
     worker.start()
@@ -17,4 +18,5 @@ const pinia = createPinia()
 
 app.use(pinia)
 app.use(router)
+app.use(createManager())
 app.mount('#app')

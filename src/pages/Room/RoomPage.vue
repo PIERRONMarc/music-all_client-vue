@@ -8,13 +8,13 @@
         <RoomHeader @toggleGuestList="toggleGuestList" />
       </template>
       <template v-slot:guestList>
-        <GuestList :show-guest-list="showGuestList" />
+        <GuestList v-if="!isCurrentRoomLoading" :show-guest-list="showGuestList" />
       </template>
       <template v-slot:roomQueue>
         <RoomQueue :on-add-song="addSong" />
       </template>
       <template v-slot:roomPlayer>
-        <RoomPlayer />
+        <RoomPlayer v-if="!isCurrentRoomLoading" />
       </template>
     </RoomTemplate>
   </div>

@@ -4,8 +4,8 @@
       <div class="flex flex-row items-center w-full gap-4 px-8 md:pr-0">
         <div class="flex flex-row items-center gap-2">
           <SoundIcon class="fill-white w-4 h-4"/>
-          <PlayIcon v-if="!isPaused" class="fill-white w-10 h-10" @click="togglePause"/>
-          <PauseCircleFilledIcon v-else class="fill-white w-10 h-10" @click="togglePause"/>
+          <PlayIcon v-if="isPaused" class="fill-white w-10 h-10" @click="togglePlay"/>
+          <PauseCircleFilledIcon v-else class="fill-white w-10 h-10" @click="togglePlay"/>
           <SkipNextIcon class="w-3 h-3 fill-white"/>
         </div>
         <div v-if="currentSong" class="flex flex-col overflow-hidden">
@@ -16,17 +16,22 @@
             {{ currentSong.author }}
           </div>
         </div>
-        <iframe
-            class="absolute md:static right-0 -bottom-96 md:h-[204px] md:w-[345px] md:self-end md:ml-auto" src="https://www.youtube.com/embed/Tppn5RsEK78"
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-        >
-        </iframe>
-      </div>
+        <YoutubeIframe
+            v-if="currentSong"
+            ref="youtubePlayer"
+            class="absolute md:static right-0 -bottom-96 md:h-[204px] md:w-[345px] md:self-end md:ml-auto"
+            :video-id="currentSong.url"
+            @state-change="onPlayerStateChange"
+            :player-vars="{
+              disablekb: 1,
+              controls: 0,
+              autoplay: 1,
+            }"
+        />
     </div>
     <div class="w-full border-b fixed bottom-0 border-[#BEBEC7] z-0"></div>
     <div class="w-1/2 border-b fixed bottom-0 border-primary-color z-10"></div>
+    </div>
   </div>
 </template>
 
@@ -38,17 +43,21 @@ import SkipNextIcon from "@/components/icons/SkipNextIcon.vue";
 import SoundIcon from "@/components/icons/SoundIcon.vue";
 import {useRoomStore} from "@/stores/room";
 import {storeToRefs} from "pinia";
+import {YoutubeIframe, PlayerState} from "@vue-youtube/component";
 
-const isPaused = ref(false);
+const isPaused = ref(true);
+const youtubePlayer = ref<typeof YoutubeIframe|null>(null);
 const roomStore = useRoomStore();
 const { currentRoom } = storeToRefs(roomStore);
 const currentSong = computed(() => currentRoom.value?.currentSong);
 
-const togglePause = () => {
-  isPaused.value = !isPaused.value;
+const togglePlay = () => youtubePlayer.value?.togglePlay();
+
+const onPlayerStateChange = (event: {data: PlayerState}) => {
+    if (event.data === PlayerState.PLAYING) {
+    isPaused.value = false;
+  } else if (event.data === PlayerState.PAUSED) {
+    isPaused.value = true;
+  }
 }
 </script>
-
-<style scoped>
-
-</style>
