@@ -49,13 +49,19 @@ const roomStore = useRoomStore();
 const { currentRoom } = storeToRefs(roomStore);
 const currentSong = computed(() => currentRoom.value?.currentSong);
 
-const togglePlay = () => youtubePlayer.value?.togglePlay();
+const togglePlay = () => {
+  youtubePlayer.value?.togglePlay()
+};
 
-const onPlayerStateChange = (event: {data: PlayerState}) => {
-    if (event.data === PlayerState.PLAYING) {
+const onPlayerStateChange = async (event: {data: PlayerState}) => {
+  if (event.data === PlayerState.PLAYING) {
     isPaused.value = false;
   } else if (event.data === PlayerState.PAUSED) {
     isPaused.value = true;
+  } else if (event.data === PlayerState.ENDED) {
+    await roomStore.nextSong();
+    // If next song has the same url, iframe will not update, so we restart the video
+    youtubePlayer.value?.instance.seekTo(0, true);
   }
 }
 </script>

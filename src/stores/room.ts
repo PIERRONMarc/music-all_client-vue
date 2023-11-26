@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
-import {computed, ref} from "vue";
+import {computed, nextTick, ref} from "vue";
 import type {Guest, Room, Song} from "@/types";
+import RoomService from "@/services/Api/RoomService";
 
 export const useRoomStore = defineStore("room", () => {
     const currentRoom = ref<Room|null>(null);
@@ -21,10 +22,25 @@ export const useRoomStore = defineStore("room", () => {
         };
     }
 
+    const nextSong = async () => {
+        if (!currentRoom.value || !currentGuest.value) return;
+
+        await RoomService.nextSong(currentRoom.value.id, currentGuest.value.token);
+
+        currentRoom.value.currentSong = null;
+
+        if (currentRoom.value.songs.length) {
+            currentRoom.value.currentSong = currentRoom.value.songs[0];
+            currentRoom.value.songs.shift();
+            return;
+        }
+    }
+
     return {
         currentRoom,
         currentGuest,
         isCurrentGuestAdmin,
-        addSong
+        addSong,
+        nextSong,
     };
 })

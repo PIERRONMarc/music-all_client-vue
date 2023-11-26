@@ -14,7 +14,7 @@
         <RoomQueue :on-add-song="addSong" />
       </template>
       <template v-slot:roomPlayer>
-        <RoomPlayer v-if="!isCurrentRoomLoading" />
+        <RoomPlayer v-if="!isCurrentRoomLoading && currentRoom.currentSong" />
       </template>
     </RoomTemplate>
   </div>

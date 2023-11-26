@@ -33,6 +33,15 @@ class RoomService
             {'Authorization': `Bearer ${token}`}
         );
     }
+
+    static async nextSong(roomId: string, token: string): Promise<void>
+    {
+        await HttpClient.get(
+            `/room/${roomId}/next-song`,
+            undefined,
+            {'Authorization': `Bearer ${token}`}
+        );
+    }
 }
 
 export default RoomService
