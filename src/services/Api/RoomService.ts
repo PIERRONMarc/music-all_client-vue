@@ -42,6 +42,16 @@ class RoomService
             {'Authorization': `Bearer ${token}`}
         );
     }
+
+    static async togglePause(isPaused: boolean, roomId: string, token: string): Promise<void>
+    {
+        await HttpClient.patch(
+            `/room/${roomId}/current-song`,
+            {isPaused},
+            undefined,
+            {'Authorization': `Bearer ${token}`}
+        );
+    }
 }
 
 export default RoomService

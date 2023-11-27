@@ -32,7 +32,7 @@ import PulseLoader from "@/components/PulseLoader/PulseLoader.vue";
 import router from "@/router";
 import {useRoomStore} from "@/stores/room";
 import {storeToRefs} from "pinia";
-import type {GuestPreview, GuestJoinMessage, AddSongMessage} from "@/types";
+import type {GuestPreview, GuestJoinMessage, AddSongMessage, UpdateCurrentSongMessage} from "@/types";
 import {MessageActions} from "@/types";
 import {createRoomEventSource} from "@/services/Api/ServiceSentEventService";
 
@@ -79,6 +79,12 @@ const onAddSongMessage = (message: AddSongMessage) => {
   });
 }
 
+const onUpdateCurrentSongMessage = (message: UpdateCurrentSongMessage) => {
+  if (!currentRoom.value?.currentSong) return;
+
+  currentRoom.value.currentSong.isPause = message.payload.isPaused;
+}
+
 onMounted(async () => {
   if (shouldJoinRoom) {
     await joinRoom();
@@ -93,6 +99,7 @@ onMounted(async () => {
     const messageData = JSON.parse(event.data);
     if (messageData.action === MessageActions.GuestJoin) onGuestJoinMessage(messageData);
     if (messageData.action === MessageActions.AddSong) onAddSongMessage(messageData);
+    if (messageData.action === MessageActions.UpdateCurrentSong) onUpdateCurrentSongMessage(messageData);
   }
 })
 
