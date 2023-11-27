@@ -44,6 +44,7 @@ export enum MessageActions {
     GuestJoin = 'guestJoin',
     AddSong = 'addSong',
     UpdateCurrentSong = 'updateCurrentSong',
+    NextSong = 'nextSong',
 }
 
 type MessageEventData<T extends MessageActions, K extends object> = {

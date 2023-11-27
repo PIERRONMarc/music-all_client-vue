@@ -14,7 +14,10 @@
         <RoomQueue :on-add-song="addSong" />
       </template>
       <template v-slot:roomPlayer>
-        <RoomPlayer v-if="!isCurrentRoomLoading && currentRoom.currentSong" />
+        <RoomPlayer
+            v-if="!isCurrentRoomLoading && currentRoom?.currentSong"
+            @song-ended="onSongEnded"
+        />
       </template>
     </RoomTemplate>
   </div>
@@ -39,7 +42,7 @@ import {createRoomEventSource} from "@/services/Api/ServiceSentEventService";
 const showGuestList = ref<boolean>(false);
 const isCurrentRoomLoading = ref<boolean>(true);
 const roomStore = useRoomStore();
-const { currentRoom, currentGuest } = storeToRefs(roomStore);
+const { currentRoom, currentGuest, isCurrentGuestAdmin } = storeToRefs(roomStore);
 const roomEventSource = ref<EventSource>();
 
 const joinRoom = async () => {
@@ -61,6 +64,12 @@ const toggleGuestList = () => {
 
 const addSong = async (songUrl: string, roomId: string, token: string) => {
   await RoomService.addSong(songUrl, roomId, token);
+}
+
+const onSongEnded = () => {
+  if (!isCurrentGuestAdmin.value || !currentRoom.value || !currentGuest.value) return;
+
+  RoomService.nextSong(currentRoom.value.id, currentGuest.value.token);
 }
 
 const onGuestJoinMessage = (message: GuestJoinMessage) => {
@@ -85,6 +94,10 @@ const onUpdateCurrentSongMessage = (message: UpdateCurrentSongMessage) => {
   currentRoom.value.currentSong.isPause = message.payload.isPaused;
 }
 
+const onNextSongMessage = () => {
+  roomStore.nextSong();
+}
+
 onMounted(async () => {
   if (shouldJoinRoom) {
     await joinRoom();
@@ -100,6 +113,7 @@ onMounted(async () => {
     if (messageData.action === MessageActions.GuestJoin) onGuestJoinMessage(messageData);
     if (messageData.action === MessageActions.AddSong) onAddSongMessage(messageData);
     if (messageData.action === MessageActions.UpdateCurrentSong) onUpdateCurrentSongMessage(messageData);
+    if (messageData.action === MessageActions.NextSong) onNextSongMessage();
   }
 })
 

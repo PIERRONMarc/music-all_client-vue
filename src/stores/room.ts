@@ -23,18 +23,16 @@ export const useRoomStore = defineStore("room", () => {
         };
     }
 
-    const nextSong = async () => {
-        if (!currentRoom.value || !currentGuest.value) return;
-
-        await RoomService.nextSong(currentRoom.value.id, currentGuest.value.token);
-
-        currentRoom.value.currentSong = null;
+    const nextSong = () => {
+        if (!currentRoom.value) return;
 
         if (currentRoom.value.songs.length) {
             currentRoom.value.currentSong = currentRoom.value.songs[0];
             currentRoom.value.songs.shift();
             return;
         }
+
+        currentRoom.value.currentSong = null;
     }
 
     const togglePause = async (isPaused?: boolean) => {

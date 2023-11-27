@@ -43,6 +43,11 @@ import {useRoomStore} from "@/stores/room";
 import {storeToRefs} from "pinia";
 import {YoutubeIframe, PlayerState} from "@vue-youtube/component";
 
+interface Emits {
+  (event: "songEnded"): void;
+}
+
+const emit = defineEmits<Emits>();
 const roomStore = useRoomStore();
 const { currentRoom, isCurrentGuestAdmin, isCurrentSongPaused } = storeToRefs(roomStore);
 const youtubePlayer = ref<typeof YoutubeIframe|null>(null);
@@ -60,7 +65,7 @@ const onPlayerStateChange = async (event: {data: PlayerState}) => {
   } else if (event.data === PlayerState.PAUSED) {
     await roomStore.togglePause(true);
   } else if (event.data === PlayerState.ENDED) {
-    await roomStore.nextSong();
+    emit('songEnded');
     // If next song has the same url, iframe will not update, so we restart the video
     youtubePlayer.value?.instance.seekTo(0, true);
   }
