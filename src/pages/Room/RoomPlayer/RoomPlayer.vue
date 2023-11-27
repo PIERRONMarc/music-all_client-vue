@@ -5,7 +5,7 @@
         <div class="flex flex-row items-center gap-2">
           <PlayIcon v-if="isCurrentSongPaused" class="fill-white w-10 h-10" @click="togglePlay"/>
           <PauseCircleFilledIcon v-else class="fill-white w-10 h-10" @click="togglePlay"/>
-          <SkipNextIcon class="w-3 h-3 fill-white"/>
+          <SkipNextIcon class="w-3 h-3 fill-white" @click="onSkip"/>
         </div>
         <div v-if="currentSong" class="flex flex-col overflow-hidden">
           <div class="truncate font-bold">
@@ -42,6 +42,7 @@ import SkipNextIcon from "@/components/icons/SkipNextIcon.vue";
 import {useRoomStore} from "@/stores/room";
 import {storeToRefs} from "pinia";
 import {YoutubeIframe, PlayerState} from "@vue-youtube/component";
+import RoomService from "@/services/Api/RoomService";
 
 interface Emits {
   (event: "songEnded"): void;
@@ -49,7 +50,7 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 const roomStore = useRoomStore();
-const { currentRoom, isCurrentGuestAdmin, isCurrentSongPaused } = storeToRefs(roomStore);
+const { currentRoom, isCurrentGuestAdmin, isCurrentSongPaused, currentGuest } = storeToRefs(roomStore);
 const youtubePlayer = ref<typeof YoutubeIframe|null>(null);
 const currentSong = computed(() => currentRoom.value?.currentSong);
 
@@ -69,6 +70,12 @@ const onPlayerStateChange = async (event: {data: PlayerState}) => {
     // If next song has the same url, iframe will not update, so we restart the video
     youtubePlayer.value?.instance.seekTo(0, true);
   }
+}
+
+const onSkip = () => {
+  if (!isCurrentGuestAdmin.value || !currentRoom.value || !currentGuest.value) return;
+
+  RoomService.nextSong(currentRoom.value.id, currentGuest.value.token);
 }
 
 watch(isCurrentSongPaused, () => {
