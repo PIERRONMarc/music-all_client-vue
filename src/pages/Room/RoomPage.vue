@@ -98,6 +98,19 @@ const onNextSongMessage = () => {
   roomStore.nextSong();
 }
 
+const leaveRoom = () => {
+  if (!currentGuest.value) return;
+
+  RoomService.leaveRoom(currentGuest.value.token);
+  currentRoom.value = null;
+  currentGuest.value = null;
+}
+
+onUnmounted(() => {
+  window.removeEventListener('unload', leaveRoom, false);
+  leaveRoom();
+})
+
 onMounted(async () => {
   if (shouldJoinRoom) {
     await joinRoom();
@@ -115,6 +128,8 @@ onMounted(async () => {
     if (messageData.action === MessageActions.UpdateCurrentSong) onUpdateCurrentSongMessage(messageData);
     if (messageData.action === MessageActions.NextSong) onNextSongMessage();
   }
+
+  window.addEventListener('unload', leaveRoom, false);
 })
 
 onUnmounted(() => {

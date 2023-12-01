@@ -52,6 +52,14 @@ class RoomService
             {'Authorization': `Bearer ${token}`}
         );
     }
+
+    static leaveRoom(token: string): void
+    {
+        navigator.sendBeacon(
+            `${import.meta.env.VITE_API_BASE_URL}/room/leave`,
+            JSON.stringify({token: token}),
+        );
+    }
 }
 
 export default RoomService
