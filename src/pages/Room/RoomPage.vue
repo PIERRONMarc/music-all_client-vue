@@ -35,7 +35,13 @@ import PulseLoader from "@/components/PulseLoader/PulseLoader.vue";
 import router from "@/router";
 import {useRoomStore} from "@/stores/room";
 import {storeToRefs} from "pinia";
-import type {GuestPreview, GuestJoinMessage, AddSongMessage, UpdateCurrentSongMessage} from "@/types";
+import type {
+  GuestPreview,
+  GuestJoinMessage,
+  AddSongMessage,
+  UpdateCurrentSongMessage,
+  GuestLeaveMessage
+} from "@/types";
 import {MessageActions} from "@/types";
 import {createRoomEventSource} from "@/services/Api/ServiceSentEventService";
 
@@ -106,6 +112,10 @@ const leaveRoom = () => {
   currentGuest.value = null;
 }
 
+const onGuestLeave = (message: GuestLeaveMessage) => {
+  roomStore.removeGuest(message.payload.name);
+}
+
 onUnmounted(() => {
   window.removeEventListener('unload', leaveRoom, false);
   leaveRoom();
@@ -127,6 +137,7 @@ onMounted(async () => {
     if (messageData.action === MessageActions.AddSong) onAddSongMessage(messageData);
     if (messageData.action === MessageActions.UpdateCurrentSong) onUpdateCurrentSongMessage(messageData);
     if (messageData.action === MessageActions.NextSong) onNextSongMessage();
+    if (messageData.action === MessageActions.GuestLeave) onGuestLeave(messageData);
   }
 
   window.addEventListener('unload', leaveRoom, false);

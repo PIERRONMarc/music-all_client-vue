@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
-import {computed, nextTick, ref} from "vue";
-import type {Guest, Room, Song} from "@/types";
+import {computed, ref} from "vue";
+import type {Guest, GuestPreview, Room, Song} from "@/types";
 import RoomService from "@/services/Api/RoomService";
 
 export const useRoomStore = defineStore("room", () => {
@@ -48,6 +48,12 @@ export const useRoomStore = defineStore("room", () => {
         currentRoom.value.currentSong.isPause = shouldBePaused;
     }
 
+    const removeGuest = (guestName: string): void => {
+        if (!currentRoom.value) return;
+
+        currentRoom.value.guests = currentRoom.value.guests.filter((guest: GuestPreview) => guestName !== guest.name);
+    }
+
     return {
         currentRoom,
         currentGuest,
@@ -56,5 +62,6 @@ export const useRoomStore = defineStore("room", () => {
         nextSong,
         togglePause,
         isCurrentSongPaused,
+        removeGuest,
     };
 })
