@@ -90,14 +90,14 @@ const onAddSongMessage = (message: AddSongMessage) => {
   roomStore.addSong({
     ...message.payload,
     lengthInSeconds: parseInt(message.payload.lengthInSeconds),
-    isPause: true,
+    isPaused: true,
   });
 }
 
 const onUpdateCurrentSongMessage = (message: UpdateCurrentSongMessage) => {
   if (!currentRoom.value?.currentSong) return;
 
-  currentRoom.value.currentSong.isPause = message.payload.isPaused;
+  currentRoom.value.currentSong.isPaused = message.payload.isPaused;
 }
 
 const onNextSongMessage = () => {

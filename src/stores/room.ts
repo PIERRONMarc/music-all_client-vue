@@ -7,7 +7,7 @@ export const useRoomStore = defineStore("room", () => {
     const currentRoom = ref<Room|null>(null);
     const currentGuest = ref<Guest|null>(null);
     const isCurrentGuestAdmin = computed(() => currentGuest.value && currentGuest.value.role === 'ADMIN');
-    const isCurrentSongPaused = computed(() => !!(currentRoom.value?.currentSong && currentRoom.value.currentSong.isPause));
+    const isCurrentSongPaused = computed(() => !!(currentRoom.value?.currentSong && currentRoom.value.currentSong.isPaused));
 
     const addSong = (song: Song) => {
         if (!currentRoom.value) return;
@@ -19,7 +19,7 @@ export const useRoomStore = defineStore("room", () => {
 
         currentRoom.value.currentSong = {
             ...song,
-            isPause: false,
+            isPaused: false,
         };
     }
 
@@ -38,14 +38,14 @@ export const useRoomStore = defineStore("room", () => {
     const togglePause = async (isPaused?: boolean) => {
         if (!currentRoom.value?.currentSong || !currentGuest.value || !isCurrentGuestAdmin.value) return;
 
-        const shouldBePaused = isPaused ?? !currentRoom.value.currentSong.isPause;
+        const shouldBePaused = isPaused ?? !currentRoom.value.currentSong.isPaused;
 
         await RoomService.togglePause(
             shouldBePaused,
             currentRoom.value.id,
             currentGuest.value.token,
         );
-        currentRoom.value.currentSong.isPause = shouldBePaused;
+        currentRoom.value.currentSong.isPaused = shouldBePaused;
     }
 
     const removeGuest = (guestName: string): void => {
