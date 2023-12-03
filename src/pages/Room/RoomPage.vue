@@ -1,6 +1,9 @@
 <template>
   <div>
     <RoomTemplate>
+      <template v-slot:welcomeModal>
+        <WelcomeModal v-model="isWelcomeModalOpen" />
+      </template>
       <template v-slot:loader>
         <PulseLoader v-if="isCurrentRoomLoading" />
       </template>
@@ -16,7 +19,9 @@
       <template v-slot:roomPlayer>
         <RoomPlayer
             v-if="!isCurrentRoomLoading && currentRoom?.currentSong"
+            :should-start-player="shouldStartPlayer"
             @song-ended="onSongEnded"
+            @ready="onPlayerReady"
         />
       </template>
     </RoomTemplate>
@@ -27,7 +32,7 @@
 import RoomTemplate from "@/pages/Room/RoomTemplate/RoomTemplate.vue";
 import RoomHeader from "@/pages/Room/RoomHeader/RoomHeader.vue";
 import GuestList from "@/pages/Room/GuestList/GuestList.vue";
-import {onMounted, onUnmounted, ref} from "vue";
+import {onMounted, onUnmounted, ref, watch} from "vue";
 import RoomQueue from "@/pages/Room/RoomQueue/RoomQueue.vue";
 import RoomPlayer from "@/pages/Room/RoomPlayer/RoomPlayer.vue";
 import RoomService from "@/services/Api/RoomService";
@@ -44,12 +49,15 @@ import type {
 } from "@/types";
 import {MessageActions} from "@/types";
 import {createRoomEventSource} from "@/services/Api/ServiceSentEventService";
+import WelcomeModal from "@/pages/Room/WelcomeModal/WelcomeModal.vue";
 
 const showGuestList = ref<boolean>(false);
 const isCurrentRoomLoading = ref<boolean>(true);
+const shouldStartPlayer = ref<boolean>(false);
 const roomStore = useRoomStore();
 const { currentRoom, currentGuest, isCurrentGuestAdmin } = storeToRefs(roomStore);
 const roomEventSource = ref<EventSource>();
+const isWelcomeModalOpen = ref<boolean>(false);
 
 const joinRoom = async () => {
   try {
@@ -100,6 +108,13 @@ const onUpdateCurrentSongMessage = (message: UpdateCurrentSongMessage) => {
   currentRoom.value.currentSong.isPaused = message.payload.isPaused;
 }
 
+const onPlayerReady = () => {
+  // We want to force the user to have interaction with the app (if he has not) to start the player, otherwise it would not start because of autoplay browsers policies
+  if (window.history.state.back === null) {
+    isWelcomeModalOpen.value = true;
+  }
+}
+
 const onNextSongMessage = () => {
   roomStore.nextSong();
 }
@@ -115,6 +130,12 @@ const leaveRoom = () => {
 const onGuestLeave = (message: GuestLeaveMessage) => {
   roomStore.removeGuest(message.payload.name);
 }
+
+watch(isWelcomeModalOpen, () => {
+  if (!isWelcomeModalOpen.value) {
+    shouldStartPlayer.value = true;
+  }
+})
 
 onUnmounted(() => {
   window.removeEventListener('unload', leaveRoom, false);

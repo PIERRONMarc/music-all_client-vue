@@ -1,5 +1,6 @@
 <template>
   <div>
+    <slot name="welcomeModal"></slot>
       <div class="absolute left-1/2 top-1/2">
         <slot name="loader"></slot>
       </div>

@@ -21,6 +21,7 @@
             class="absolute md:static right-0 -bottom-96 md:h-[204px] md:w-[345px] md:self-end md:ml-auto"
             :video-id="currentSong.url"
             @state-change="onPlayerStateChange"
+            @ready="$emit('ready')"
             :player-vars="{
               disablekb: 1,
               controls: 0,
@@ -36,7 +37,7 @@
 
 <script setup lang="ts">
 import PlayIcon from "@/components/icons/PlayIcon.vue";
-import {computed, onMounted, ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import PauseCircleFilledIcon from "@/components/icons/PauseCircleFilledIcon.vue";
 import SkipNextIcon from "@/components/icons/SkipNextIcon.vue";
 import {useRoomStore} from "@/stores/room";
@@ -46,9 +47,15 @@ import RoomService from "@/services/Api/RoomService";
 
 interface Emits {
   (event: "songEnded"): void;
+  (event: "ready"): void;
+}
+
+interface Props {
+  shouldStartPlayer: boolean;
 }
 
 const emit = defineEmits<Emits>();
+const props = defineProps<Props>();
 const roomStore = useRoomStore();
 const { currentRoom, isCurrentGuestAdmin, isCurrentSongPaused, currentGuest } = storeToRefs(roomStore);
 const youtubePlayer = ref<typeof YoutubeIframe|null>(null);
@@ -83,5 +90,18 @@ watch(isCurrentSongPaused, () => {
   if (isCurrentGuestAdmin.value) return;
 
   youtubePlayer.value?.togglePlay()
-})
+});
+
+watch(() => props.shouldStartPlayer, () => {
+  if (props.shouldStartPlayer && !isCurrentSongPaused.value) {
+    youtubePlayer.value?.instance.playVideo();
+  }
+
+  // we want to sync with the room once the player started
+  if (props.shouldStartPlayer && isCurrentSongPaused.value) {
+    console.log('pausing video')
+    youtubePlayer.value?.instance.playVideo();
+    youtubePlayer.value?.instance.pauseVideo();
+  }
+});
 </script>
