@@ -3,16 +3,19 @@ import HomeTemplate from "@/pages/HomePage/HomeTemplate/HomeTemplate.vue";
 import Hero from "@/components/Hero/Hero.vue";
 import Mello from "@/components/icons/MelloIcon.vue";
 import RoomList from "@/components/RoomList/RoomList.vue";
-import {onMounted, ref} from "vue";
+import {onMounted, ref, onUnmounted} from "vue";
 import RoomService from "@/services/Api/RoomService";
-import type {RoomPreview} from "@/types";
+import type {DeleteRoomMessage, RoomPreview} from "@/types";
 import router from "@/router";
 import {useRoomStore} from "@/stores/room";
 import {storeToRefs} from "pinia";
+import {createRoomListEventSource} from "@/services/Api/ServiceSentEventService";
+import {MessageActions} from "@/types";
 
 const roomList = ref<RoomPreview[]>([])
 const roomListIsLoading = ref<boolean>(true)
 const hasRoomListFailedWhileLoading = ref<boolean>(false)
+const roomListEventSource = ref<EventSource>();
 const roomStore = useRoomStore();
 const { currentRoom, currentGuest } = storeToRefs(roomStore);
 
@@ -41,10 +44,24 @@ async function createRoom() {
   }
 }
 
+function onDeleteRoom(message: DeleteRoomMessage): void
+{
+  roomList.value = roomList.value.filter(room => room.name !== message.payload.name);
+}
+
 onMounted(() => {
-  getRooms()
+  getRooms();
+
+  roomListEventSource.value = createRoomListEventSource();
+  roomListEventSource.value.onmessage = (event) => {
+    const messageData = JSON.parse(event.data);
+    if (messageData.action === MessageActions.DeleteRoom) onDeleteRoom(messageData);
+  }
 })
 
+onUnmounted(() => {
+  roomListEventSource.value?.close();
+})
 </script>
 
 <template>

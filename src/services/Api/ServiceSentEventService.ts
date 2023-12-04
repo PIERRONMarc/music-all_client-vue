@@ -10,3 +10,8 @@ export function createRoomEventSource(roomId: string): EventSource
 {
     return createEventSource(`/room/${roomId}`);
 }
+
+export function createRoomListEventSource(): EventSource
+{
+    return createEventSource("/roomList");
+}
