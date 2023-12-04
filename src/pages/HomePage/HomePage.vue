@@ -5,7 +5,7 @@ import Mello from "@/components/icons/MelloIcon.vue";
 import RoomList from "@/components/RoomList/RoomList.vue";
 import {onMounted, ref, onUnmounted} from "vue";
 import RoomService from "@/services/Api/RoomService";
-import type {DeleteRoomMessage, RoomPreview} from "@/types";
+import type {CreateRoomMessage, DeleteRoomMessage, RoomPreview} from "@/types";
 import router from "@/router";
 import {useRoomStore} from "@/stores/room";
 import {storeToRefs} from "pinia";
@@ -49,6 +49,11 @@ function onDeleteRoom(message: DeleteRoomMessage): void
   roomList.value = roomList.value.filter(room => room.name !== message.payload.name);
 }
 
+function onCreateRoom(message: CreateRoomMessage): void
+{
+  roomList.value.push(message.payload);
+}
+
 onMounted(() => {
   getRooms();
 
@@ -56,6 +61,7 @@ onMounted(() => {
   roomListEventSource.value.onmessage = (event) => {
     const messageData = JSON.parse(event.data);
     if (messageData.action === MessageActions.DeleteRoom) onDeleteRoom(messageData);
+    if (messageData.action === MessageActions.CreateRoom) onCreateRoom(messageData);
   }
 })
 
