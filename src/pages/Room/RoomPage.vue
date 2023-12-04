@@ -110,7 +110,7 @@ const onUpdateCurrentSongMessage = (message: UpdateCurrentSongMessage) => {
 
 const onPlayerReady = () => {
   // We want to force the user to have interaction with the app (if he has not) to start the player, otherwise it would not start because of autoplay browsers policies
-  if (window.history.state.back === null) {
+  if (!window.navigator.userActivation.isActive) {
     isWelcomeModalOpen.value = true;
   }
 }
