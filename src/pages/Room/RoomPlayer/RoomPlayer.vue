@@ -99,7 +99,6 @@ watch(() => props.shouldStartPlayer, () => {
 
   // we want to sync with the room once the player started
   if (props.shouldStartPlayer && isCurrentSongPaused.value) {
-    console.log('pausing video')
     youtubePlayer.value?.instance.playVideo();
     youtubePlayer.value?.instance.pauseVideo();
   }

@@ -45,7 +45,8 @@ import type {
   GuestJoinMessage,
   AddSongMessage,
   UpdateCurrentSongMessage,
-  GuestLeaveMessage
+  GuestLeaveMessage,
+  UpdateGuestMessage,
 } from "@/types";
 import {MessageActions} from "@/types";
 import {createRoomEventSource} from "@/services/Api/ServiceSentEventService";
@@ -131,6 +132,10 @@ const onGuestLeave = (message: GuestLeaveMessage) => {
   roomStore.removeGuest(message.payload.name);
 }
 
+const onGuestUpdate = (message: UpdateGuestMessage) => {
+  roomStore.updateGuest(message.payload.name, message.payload.role);
+}
+
 watch(isWelcomeModalOpen, () => {
   if (!isWelcomeModalOpen.value) {
     shouldStartPlayer.value = true;
@@ -159,6 +164,7 @@ onMounted(async () => {
     if (messageData.action === MessageActions.UpdateCurrentSong) onUpdateCurrentSongMessage(messageData);
     if (messageData.action === MessageActions.NextSong) onNextSongMessage();
     if (messageData.action === MessageActions.GuestLeave) onGuestLeave(messageData);
+    if (messageData.action === MessageActions.UpdateGuest) onGuestUpdate(messageData);
   }
 
   window.addEventListener('unload', leaveRoom, false);

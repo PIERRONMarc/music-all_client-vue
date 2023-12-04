@@ -46,6 +46,7 @@ export enum MessageActions {
     AddSong = 'addSong',
     UpdateCurrentSong = 'updateCurrentSong',
     NextSong = 'nextSong',
+    UpdateGuest = 'updateGuest',
 }
 
 type MessageEventData<T extends MessageActions, K extends object> = {
@@ -73,4 +74,9 @@ export type AddSongMessage = MessageEventData<MessageActions.AddSong, {
 export type UpdateCurrentSongMessage = MessageEventData<MessageActions.UpdateCurrentSong, {
     url: string,
     isPaused: boolean,
+}>
+
+export type UpdateGuestMessage = MessageEventData<MessageActions.UpdateGuest, {
+    name: string;
+    role: GuestRoles;
 }>
