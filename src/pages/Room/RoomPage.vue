@@ -13,8 +13,11 @@
       <template v-slot:guestList>
         <GuestList v-if="!isCurrentRoomLoading" :show-guest-list="showGuestList" />
       </template>
-      <template v-slot:roomQueue>
+      <template v-if="!isRoomClosed" v-slot:roomQueue>
         <RoomQueue :on-add-song="addSong" />
+      </template>
+      <template v-if="isRoomClosed" v-slot:roomClosed>
+        <RoomClosed @room-created="onRoomCreated" />
       </template>
       <template v-slot:roomPlayer>
         <RoomPlayer
@@ -51,6 +54,7 @@ import type {
 import {MessageActions} from "@/types";
 import {createRoomEventSource} from "@/services/Api/ServiceSentEventService";
 import WelcomeModal from "@/pages/Room/WelcomeModal/WelcomeModal.vue";
+import RoomClosed from "@/pages/Room/RoomClosed/RoomClosed.vue";
 
 const showGuestList = ref<boolean>(false);
 const isCurrentRoomLoading = ref<boolean>(true);
@@ -59,14 +63,17 @@ const roomStore = useRoomStore();
 const { currentRoom, currentGuest, isCurrentGuestAdmin } = storeToRefs(roomStore);
 const roomEventSource = ref<EventSource>();
 const isWelcomeModalOpen = ref<boolean>(false);
+const isRoomClosed = ref<boolean>(false);
 
 const joinRoom = async () => {
   try {
     const joinRoomResponse = await RoomService.join(router.currentRoute.value.params.id as string);
     currentRoom.value = joinRoomResponse.room;
     currentGuest.value = joinRoomResponse.guest;
-  } catch (e) {
-    console.error(e)
+  } catch (error: any) {
+    if (error.status == 404) {
+      isRoomClosed.value = true;
+    }
   }
   isCurrentRoomLoading.value = false;
 }
@@ -136,15 +143,14 @@ const onGuestUpdate = (message: UpdateGuestMessage) => {
   roomStore.updateGuest(message.payload.name, message.payload.role);
 }
 
+const onRoomCreated = () => {
+  isRoomClosed.value = false;
+}
+
 watch(isWelcomeModalOpen, () => {
   if (!isWelcomeModalOpen.value) {
     shouldStartPlayer.value = true;
   }
-})
-
-onUnmounted(() => {
-  window.removeEventListener('unload', leaveRoom, false);
-  leaveRoom();
 })
 
 onMounted(async () => {
@@ -172,5 +178,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
   roomEventSource.value?.close();
+  window.removeEventListener('unload', leaveRoom, false);
+  leaveRoom();
 })
 </script>

@@ -8,6 +8,7 @@
       <slot name="guestList"></slot>
       <div class="px-6 pt-12">
           <slot name="roomQueue"></slot>
+          <slot name="roomClosed"></slot>
       </div>
       <slot name="roomPlayer"></slot>
   </div>
