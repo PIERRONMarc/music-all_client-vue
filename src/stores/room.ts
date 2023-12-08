@@ -72,6 +72,12 @@ export const useRoomStore = defineStore("room", () => {
         }
     }
 
+    const deleteSong = (songId: string): void => {
+        if (!currentRoom.value) return;
+
+        currentRoom.value.songs = currentRoom.value.songs.filter(song => song.id !== songId);
+    }
+
     return {
         currentRoom,
         currentGuest,
@@ -82,5 +88,6 @@ export const useRoomStore = defineStore("room", () => {
         isCurrentSongPaused,
         removeGuest,
         updateGuest,
+        deleteSong,
     };
 })

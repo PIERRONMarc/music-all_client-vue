@@ -8,6 +8,7 @@ export interface Room {
 }
 
 export interface Song {
+    id: string,
     url: string,
     isPaused: boolean,
     title: string,
@@ -49,6 +50,7 @@ export enum MessageActions {
     UpdateGuest = 'updateGuest',
     DeleteRoom = 'deleteRoom',
     CreateRoom = 'createRoom',
+    DeleteSong = 'deleteSong',
 }
 
 type MessageEventData<T extends MessageActions, K extends object> = {
@@ -88,3 +90,7 @@ export type DeleteRoomMessage = MessageEventData<MessageActions.DeleteRoom, {
 }>
 
 export type CreateRoomMessage = MessageEventData<MessageActions.CreateRoom, RoomPreview>
+
+export type DeleteSongMessage = MessageEventData<MessageActions.DeleteSong, {
+    songId: string;
+}>

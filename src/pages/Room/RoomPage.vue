@@ -14,7 +14,7 @@
         <GuestList v-if="!isCurrentRoomLoading" :show-guest-list="showGuestList" />
       </template>
       <template v-if="!isRoomClosed" v-slot:roomQueue>
-        <RoomQueue :on-add-song="addSong" />
+        <RoomQueue :on-add-song="addSong" @delete-song="onDeleteSong" />
       </template>
       <template v-if="isRoomClosed" v-slot:roomClosed>
         <RoomClosed @room-created="onRoomCreated" />
@@ -50,6 +50,7 @@ import type {
   UpdateCurrentSongMessage,
   GuestLeaveMessage,
   UpdateGuestMessage,
+  DeleteSongMessage,
 } from "@/types";
 import {MessageActions} from "@/types";
 import {createRoomEventSource} from "@/services/Api/ServiceSentEventService";
@@ -147,6 +148,16 @@ const onRoomCreated = () => {
   isRoomClosed.value = false;
 }
 
+const onDeleteSong = (id: string) => {
+  if (!currentRoom.value || !currentGuest.value || !isCurrentGuestAdmin.value) return;
+
+  RoomService.deleteSong(currentRoom.value.id, id,  currentGuest.value.token);
+}
+
+const onDeleteSongMessage = (message: DeleteSongMessage) => {
+  roomStore.deleteSong(message.payload.songId);
+}
+
 watch(isWelcomeModalOpen, () => {
   if (!isWelcomeModalOpen.value) {
     shouldStartPlayer.value = true;
@@ -171,6 +182,7 @@ onMounted(async () => {
     if (messageData.action === MessageActions.NextSong) onNextSongMessage();
     if (messageData.action === MessageActions.GuestLeave) onGuestLeave(messageData);
     if (messageData.action === MessageActions.UpdateGuest) onGuestUpdate(messageData);
+    if (messageData.action === MessageActions.DeleteSong) onDeleteSongMessage(messageData);
   }
 
   window.addEventListener('unload', leaveRoom, false);

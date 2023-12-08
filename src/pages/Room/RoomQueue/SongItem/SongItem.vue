@@ -31,7 +31,11 @@
             {{  Math.floor(lengthInSeconds / 60) }}:{{ lengthInSeconds % 60 }}
         </div>
         <div class="w-1/6">
-            <HightlightOff v-if="!isCurrentSong" class="fill-white w-5 h-5 mx-auto"/>
+            <HightlightOff
+                v-if="!isCurrentSong"
+                class="fill-white w-5 h-5 mx-auto cursor-pointer hover:fill-primary-color ease-in duration-150"
+                @click="onDeleteSong"
+            />
         </div>
     </div>
 </template>
@@ -42,15 +46,21 @@ import HightlightOff from "@/components/icons/HightlightOffIcon.vue";
 import playingStatus from "@/assets/lotties/playing-status.json";
 import * as LottiePlayer from "@lottiefiles/lottie-player";
 
-defineProps<{
+const props = defineProps<{
+    id: string,
     index: number,
     title: string,
     author: string,
     lengthInSeconds: number
     isCurrentSong: boolean
 }>();
+const emit = defineEmits<{
+  (event: "deleteSong", id: string): void;
+}>();
+
+function onDeleteSong() {
+  if (window.confirm("Are you sure to delete this song from the playlist ?")) {
+    emit("deleteSong", props.id);
+  }
+}
 </script>
-
-<style scoped>
-
-</style>

@@ -60,6 +60,15 @@ class RoomService
             JSON.stringify({token: token}),
         );
     }
+
+    static async deleteSong(roomId: string, songId: string, token: string): Promise<void>
+    {
+        await HttpClient.delete(
+            `/room/${roomId}/song/${songId}`,
+            undefined,
+            {'Authorization': `Bearer ${token}`}
+        );
+    }
 }
 
 export default RoomService

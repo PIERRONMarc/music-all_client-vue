@@ -6,6 +6,7 @@
     <SongItem
         v-if="currentRoom && currentRoom.currentSong"
         :index="1"
+        :id="currentRoom.currentSong.id"
         :title="currentRoom.currentSong.title"
         :author="currentRoom.currentSong.author"
         :length-in-seconds="currentRoom.currentSong.lengthInSeconds"
@@ -16,10 +17,12 @@
         v-for="(song, index) in currentRoom.songs.values()"
         :key="index + 1"
         :index="index"
+        :id="song.id"
         :title="song.title"
         :author="song.author"
         :length-in-seconds="song.lengthInSeconds"
         :is-current-song="false"
+        @delete-song="onDeleteSong"
     />
     <div v-if="currentRoom && !currentRoom.currentSong && currentRoom.songs.length === 0" class="h-full flex flex-col justify-center items-center">
         <ComposeMusicIcon class="w-3/5 sm:max-w-[300px] h-auto" />
@@ -38,6 +41,14 @@ defineProps<{
   onAddSong: Function
 }>();
 
+const emit = defineEmits<{
+  (event: "deleteSong", id: string): void;
+}>();
+
 const roomStore = useRoomStore();
 const { currentRoom, isCurrentGuestAdmin } = storeToRefs(roomStore);
+
+function onDeleteSong(id: string) {
+  emit("deleteSong", id);
+}
 </script>
