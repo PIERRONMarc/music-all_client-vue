@@ -84,7 +84,7 @@ class HttpClient {
         queryParams?: {[key: string]: any},
         headers?: {[key: string]: string},
     ) {
-        return await HttpClient.request('POST', route, undefined, queryParams, headers);
+        return await HttpClient.request('DELETE', route, undefined, queryParams, headers);
     }
 
     public static async patch(
