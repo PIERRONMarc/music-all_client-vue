@@ -26,7 +26,8 @@
     />
     <div v-if="currentRoom && !currentRoom.currentSong && currentRoom.songs.length === 0" class="h-full flex flex-col justify-center items-center">
         <ComposeMusicIcon class="w-3/5 sm:max-w-[300px] h-auto" />
-        <p class="mt-14 mb-3.5 text-base">Add some songs to the queue !</p>
+        <p v-if="isCurrentGuestAdmin" class="mt-14 mb-3.5 text-base">Add some songs to the queue !</p>
+        <p v-else class="mt-14 mb-3.5 text-base">Waiting for the admin to add songs to the queue.</p>
     </div>
 </template>
 
