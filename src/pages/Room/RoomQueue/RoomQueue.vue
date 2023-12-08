@@ -1,7 +1,7 @@
 <template>
     <h1 class="font-montserrat text-2xl mb-8">Queue</h1>
     <div class="mb-8" v-if="isCurrentGuestAdmin">
-        <YoutubeSearch :on-add-song="onAddSong" />
+        <YoutubeSearch :on-add-song="onAddSong" :is-adding-song="isAddingSong" />
     </div>
     <SongItem
         v-if="currentRoom && currentRoom.currentSong"
@@ -39,7 +39,8 @@ import {useRoomStore} from "@/stores/room";
 import {storeToRefs} from "pinia";
 
 defineProps<{
-  onAddSong: Function
+  onAddSong: Function;
+  isAddingSong: boolean;
 }>();
 
 const emit = defineEmits<{

@@ -1,8 +1,8 @@
 <template>
   <div v-show="loading">
-    <div class="bg-white w-3 h-3 m-0.5 rounded-full inline-block pulse-animation first-delay"></div>
-    <div class="bg-white w-3 h-3 m-0.5 rounded-full inline-block pulse-animation second-delay"></div>
-    <div class="bg-white w-3 h-3 m-0.5 rounded-full inline-block pulse-animation third-delay"></div>
+    <div class="bg-white w-2 h-2 m-0.5 rounded-full inline-block pulse-animation first-delay"></div>
+    <div class="bg-white w-2 h-2 m-0.5 rounded-full inline-block pulse-animation second-delay"></div>
+    <div class="bg-white w-2 h-2 m-0.5 rounded-full inline-block pulse-animation third-delay"></div>
   </div>
 </template>
 

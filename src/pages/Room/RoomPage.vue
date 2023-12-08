@@ -14,7 +14,7 @@
         <GuestList v-if="!isCurrentRoomLoading" :show-guest-list="showGuestList" />
       </template>
       <template v-if="!isRoomClosed" v-slot:roomQueue>
-        <RoomQueue :on-add-song="addSong" @delete-song="onDeleteSong" />
+        <RoomQueue :on-add-song="addSong" @delete-song="onDeleteSong" :is-adding-song="isAddingSong"/>
       </template>
       <template v-if="isRoomClosed" v-slot:roomClosed>
         <RoomClosed @room-created="onRoomCreated" />
@@ -65,6 +65,7 @@ const { currentRoom, currentGuest, isCurrentGuestAdmin } = storeToRefs(roomStore
 const roomEventSource = ref<EventSource>();
 const isWelcomeModalOpen = ref<boolean>(false);
 const isRoomClosed = ref<boolean>(false);
+const isAddingSong = ref<boolean>(false);
 
 const joinRoom = async () => {
   try {
@@ -86,7 +87,14 @@ const toggleGuestList = () => {
 }
 
 const addSong = async (songUrl: string, roomId: string, token: string) => {
-  await RoomService.addSong(songUrl, roomId, token);
+  isAddingSong.value = true;
+  try {
+    await RoomService.addSong(songUrl, roomId, token);
+  } catch (e) {
+    // TODO let the user now it failed (by adding a notification system for example)
+    console.error(e);
+  }
+  isAddingSong.value = false;
 }
 
 const onSongEnded = () => {
