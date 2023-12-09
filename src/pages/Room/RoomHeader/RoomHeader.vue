@@ -1,7 +1,7 @@
 <template>
   <div class="h-16 flex flex-row items-center px-6 gap-x-6 border-b border-white/20">
       <RoomHeaderItem title="Home" path="/" :icon-component="HomeIcon"/>
-      <RoomHeaderItem :title="currentRoomName" path="/room" :icon-component="MusicNoteIcon" is-active/>
+      <RoomHeaderItem :title="currentRoomName" :path="currentRoomPath" :icon-component="MusicNoteIcon" is-active/>
       <div class="ml-auto">
           <Button :on-click="onClick" rounded :color="showGuestList ? '' : '#FFFFFF'">
               <PeopleIcon :class="showGuestList ? 'fill-white': 'fill-black'"/>
@@ -23,7 +23,8 @@ import {storeToRefs} from "pinia";
 const roomStore = useRoomStore();
 const { currentRoom } = storeToRefs(roomStore);
 
-const currentRoomName = computed(() => 'Room' + (currentRoom.value ? '/' + currentRoom.value.name : ''));
+const currentRoomName = computed(() => 'Room/' + (currentRoom.value ? currentRoom.value.name : ''));
+const currentRoomPath = computed(() => '/room/' + (currentRoom.value ? currentRoom.value.id : 'unknown'));
 const emit = defineEmits(["toggleGuestList"]);
 const showGuestList = ref(false);
 
