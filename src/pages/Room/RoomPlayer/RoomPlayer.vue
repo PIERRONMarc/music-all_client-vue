@@ -48,10 +48,11 @@ import RoomService from "@/services/Api/RoomService";
 interface Emits {
   (event: "songEnded"): void;
   (event: "ready"): void;
+  (event: "update:shouldRestartPlayer", value: boolean): void;
 }
 
 interface Props {
-  shouldStartPlayer: boolean;
+  shouldRestartPlayer: boolean;
 }
 
 const emit = defineEmits<Emits>();
@@ -74,8 +75,6 @@ const onPlayerStateChange = async (event: {data: PlayerState}) => {
     await roomStore.togglePause(true);
   } else if (event.data === PlayerState.ENDED) {
     emit('songEnded');
-    // If next song has the same url, iframe will not update, so we restart the video
-    youtubePlayer.value?.instance.seekTo(0, true);
   }
 }
 
@@ -92,15 +91,18 @@ watch(isCurrentSongPaused, () => {
   youtubePlayer.value?.togglePlay()
 });
 
-watch(() => props.shouldStartPlayer, () => {
-  if (props.shouldStartPlayer && !isCurrentSongPaused.value) {
+watch(() => props.shouldRestartPlayer, () => {
+  if (props.shouldRestartPlayer && !isCurrentSongPaused.value) {
+    youtubePlayer.value?.instance.seekTo(0, true);
     youtubePlayer.value?.instance.playVideo();
   }
 
   // we want to sync with the room once the player started
-  if (props.shouldStartPlayer && isCurrentSongPaused.value) {
+  if (props.shouldRestartPlayer && isCurrentSongPaused.value) {
     youtubePlayer.value?.instance.playVideo();
     youtubePlayer.value?.instance.pauseVideo();
   }
+
+  emit("update:shouldRestartPlayer", false);
 });
 </script>

@@ -22,7 +22,7 @@
       <template v-slot:roomPlayer>
         <RoomPlayer
             v-if="!isCurrentRoomLoading && currentRoom?.currentSong"
-            :should-start-player="shouldStartPlayer"
+            v-model:should-restart-player="shouldRestartPlayer"
             @song-ended="onSongEnded"
             @ready="onPlayerReady"
         />
@@ -59,7 +59,7 @@ import RoomClosed from "@/pages/Room/RoomClosed/RoomClosed.vue";
 
 const showGuestList = ref<boolean>(false);
 const isCurrentRoomLoading = ref<boolean>(true);
-const shouldStartPlayer = ref<boolean>(false);
+const shouldRestartPlayer = ref<boolean>(false);
 const roomStore = useRoomStore();
 const { currentRoom, currentGuest, isCurrentGuestAdmin } = storeToRefs(roomStore);
 const roomEventSource = ref<EventSource>();
@@ -133,7 +133,12 @@ const onPlayerReady = () => {
 }
 
 const onNextSongMessage = () => {
-  roomStore.nextSong();
+  // If next song has the same url, iframe will not update, so we restart the video
+  if (roomStore.getNextSong()?.url === roomStore.getCurrentSong()?.url) {
+    shouldRestartPlayer.value = true;
+  }
+
+  roomStore.playNextSong();
 }
 
 const leaveRoom = () => {
@@ -168,7 +173,7 @@ const onDeleteSongMessage = (message: DeleteSongMessage) => {
 
 watch(isWelcomeModalOpen, () => {
   if (!isWelcomeModalOpen.value) {
-    shouldStartPlayer.value = true;
+    shouldRestartPlayer.value = true;
   }
 })
 

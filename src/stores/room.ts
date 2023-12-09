@@ -23,11 +23,30 @@ export const useRoomStore = defineStore("room", () => {
         };
     }
 
-    const nextSong = () => {
+    const getNextSong = (): Song | null => {
+        if (!currentRoom.value) return null;
+
+        if (currentRoom.value.songs.length) return currentRoom.value.songs[0];
+
+        return null;
+    }
+
+    const getCurrentSong = (): Song | null => {
+        if (!currentRoom.value) return null;
+
+        return currentRoom.value.currentSong;
+    }
+
+    const playNextSong = () => {
         if (!currentRoom.value) return;
 
-        if (currentRoom.value.songs.length) {
-            currentRoom.value.currentSong = currentRoom.value.songs[0];
+        const nextSong = getNextSong();
+
+        if (nextSong) {
+            currentRoom.value.currentSong = {
+                ...nextSong,
+                isPaused: false,
+            };
             currentRoom.value.songs.shift();
             return;
         }
@@ -83,11 +102,13 @@ export const useRoomStore = defineStore("room", () => {
         currentGuest,
         isCurrentGuestAdmin,
         addSong,
-        nextSong,
+        playNextSong,
         togglePause,
         isCurrentSongPaused,
         removeGuest,
         updateGuest,
         deleteSong,
+        getNextSong,
+        getCurrentSong,
     };
 })
