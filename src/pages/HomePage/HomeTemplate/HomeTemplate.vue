@@ -12,7 +12,7 @@
         <slot name="mello"></slot>
       </div>
     </div>
-    <div class="grow pb-8 pr-8 pl-8 bg-bg-light-color md:p-[2.5%]">
+    <div class="grow pb-8 pr-8 pl-8 bg-bg-light-color md:p-[2.5%] max-h-screen overflow-scroll">
       <slot name="roomList"></slot>
     </div>
   </div>
