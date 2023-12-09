@@ -157,7 +157,19 @@ const onGuestUpdate = (message: UpdateGuestMessage) => {
   roomStore.updateGuest(message.payload.name, message.payload.role);
 }
 
-const onRoomCreated = () => {
+const onRoomCreated = async () => {
+  try {
+    const createRoomResponse = await RoomService.create();
+    currentRoom.value = createRoomResponse;
+    currentGuest.value = createRoomResponse.host;
+    roomEventSource.value?.close();
+    consumeRoomEventSource();
+    window.addEventListener('unload', leaveRoom, false);
+    await router.push({name: 'room', params: {id: createRoomResponse.id}})
+  } catch (e) {
+    console.error(e)
+    // TODO display a popup for failed creation
+  }
   isRoomClosed.value = false;
 }
 
@@ -169,6 +181,22 @@ const onDeleteSong = (id: string) => {
 
 const onDeleteSongMessage = (message: DeleteSongMessage) => {
   roomStore.deleteSong(message.payload.songId);
+}
+
+const consumeRoomEventSource = () => {
+  if (!currentRoom.value) return;
+
+  roomEventSource.value = createRoomEventSource(currentRoom.value.id);
+  roomEventSource.value.onmessage = (event) => {
+    const messageData = JSON.parse(event.data);
+    if (messageData.action === MessageActions.GuestJoin) onGuestJoinMessage(messageData);
+    if (messageData.action === MessageActions.AddSong) onAddSongMessage(messageData);
+    if (messageData.action === MessageActions.UpdateCurrentSong) onUpdateCurrentSongMessage(messageData);
+    if (messageData.action === MessageActions.NextSong) onNextSongMessage();
+    if (messageData.action === MessageActions.GuestLeave) onGuestLeave(messageData);
+    if (messageData.action === MessageActions.UpdateGuest) onGuestUpdate(messageData);
+    if (messageData.action === MessageActions.DeleteSong) onDeleteSongMessage(messageData);
+  }
 }
 
 watch(isWelcomeModalOpen, () => {
@@ -184,20 +212,7 @@ onMounted(async () => {
     isCurrentRoomLoading.value = false;
   }
 
-  if (!currentRoom.value) return;
-
-  roomEventSource.value = createRoomEventSource(currentRoom.value.id);
-  roomEventSource.value.onmessage = (event) => {
-    const messageData = JSON.parse(event.data);
-    if (messageData.action === MessageActions.GuestJoin) onGuestJoinMessage(messageData);
-    if (messageData.action === MessageActions.AddSong) onAddSongMessage(messageData);
-    if (messageData.action === MessageActions.UpdateCurrentSong) onUpdateCurrentSongMessage(messageData);
-    if (messageData.action === MessageActions.NextSong) onNextSongMessage();
-    if (messageData.action === MessageActions.GuestLeave) onGuestLeave(messageData);
-    if (messageData.action === MessageActions.UpdateGuest) onGuestUpdate(messageData);
-    if (messageData.action === MessageActions.DeleteSong) onDeleteSongMessage(messageData);
-  }
-
+  consumeRoomEventSource();
   window.addEventListener('unload', leaveRoom, false);
 })
 
