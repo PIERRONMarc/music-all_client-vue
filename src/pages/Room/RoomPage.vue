@@ -56,6 +56,7 @@ import {MessageActions} from "@/types";
 import {createRoomEventSource} from "@/services/Api/ServiceSentEventService";
 import WelcomeModal from "@/pages/Room/WelcomeModal/WelcomeModal.vue";
 import RoomClosed from "@/pages/Room/RoomClosed/RoomClosed.vue";
+import {useToast} from "vue-toast-notification";
 
 const showGuestList = ref<boolean>(false);
 const isCurrentRoomLoading = ref<boolean>(true);
@@ -66,6 +67,7 @@ const roomEventSource = ref<EventSource>();
 const isWelcomeModalOpen = ref<boolean>(false);
 const isRoomClosed = ref<boolean>(false);
 const isAddingSong = ref<boolean>(false);
+const $toast = useToast();
 
 const joinRoom = async () => {
   try {
@@ -91,8 +93,7 @@ const addSong = async (songUrl: string, roomId: string, token: string) => {
   try {
     await RoomService.addSong(songUrl, roomId, token);
   } catch (e) {
-    // TODO let the user now it failed (by adding a notification system for example)
-    console.error(e);
+    $toast.error("Oops, something went wrong. Please try again later.")
   }
   isAddingSong.value = false;
 }
@@ -100,7 +101,13 @@ const addSong = async (songUrl: string, roomId: string, token: string) => {
 const onSongEnded = () => {
   if (!isCurrentGuestAdmin.value || !currentRoom.value || !currentGuest.value) return;
 
-  RoomService.nextSong(currentRoom.value.id, currentGuest.value.token);
+  try {
+    RoomService.nextSong(currentRoom.value.id, currentGuest.value.token);
+  } catch (e) {
+    $toast.error("Oops, we could not play the next song. Please skip manually to the next song.", {
+      duration: 0,
+    })
+  }
 }
 
 const onGuestJoinMessage = (message: GuestJoinMessage) => {
@@ -167,8 +174,7 @@ const onRoomCreated = async () => {
     window.addEventListener('unload', leaveRoom, false);
     await router.push({name: 'room', params: {id: createRoomResponse.id}})
   } catch (e) {
-    console.error(e)
-    // TODO display a popup for failed creation
+    $toast.error("Oops, something went wrong. Please try again later.")
   }
   isRoomClosed.value = false;
 }
@@ -176,7 +182,11 @@ const onRoomCreated = async () => {
 const onDeleteSong = (id: string) => {
   if (!currentRoom.value || !currentGuest.value || !isCurrentGuestAdmin.value) return;
 
-  RoomService.deleteSong(currentRoom.value.id, id,  currentGuest.value.token);
+  try {
+    RoomService.deleteSong(currentRoom.value.id, id,  currentGuest.value.token);
+  } catch (e) {
+    $toast.error("Oops, something went wrong. Please try again later.")
+  }
 }
 
 const onDeleteSongMessage = (message: DeleteSongMessage) => {
@@ -206,14 +216,19 @@ watch(isWelcomeModalOpen, () => {
 })
 
 onMounted(async () => {
-  if (shouldJoinRoom) {
-    await joinRoom();
-  } else {
-    isCurrentRoomLoading.value = false;
-  }
+  try {
+    if (shouldJoinRoom) {
+      await joinRoom();
+    } else {
+      isCurrentRoomLoading.value = false;
+    }
 
-  consumeRoomEventSource();
-  window.addEventListener('unload', leaveRoom, false);
+    consumeRoomEventSource();
+    window.addEventListener('unload', leaveRoom, false);
+  } catch (e) {
+    await router.push({name: 'home'})
+    $toast.error("Oops, something went wrong. Please try again later.")
+  }
 })
 
 onUnmounted(() => {

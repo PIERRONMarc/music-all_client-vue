@@ -44,6 +44,7 @@ import {useRoomStore} from "@/stores/room";
 import {storeToRefs} from "pinia";
 import {YoutubeIframe, PlayerState} from "@vue-youtube/component";
 import RoomService from "@/services/Api/RoomService";
+import {useToast} from "vue-toast-notification";
 
 interface Emits {
   (event: "songEnded"): void;
@@ -61,10 +62,12 @@ const roomStore = useRoomStore();
 const { currentRoom, isCurrentGuestAdmin, isCurrentSongPaused, currentGuest } = storeToRefs(roomStore);
 const youtubePlayer = ref<typeof YoutubeIframe|null>(null);
 const currentSong = computed(() => currentRoom.value?.currentSong);
+const $toast = useToast();
 
 const togglePlay = () => {
   if (!isCurrentGuestAdmin.value) return;
 
+  youtubePlayer.value?.instance.seekTo(205, true);
   youtubePlayer.value?.togglePlay()
 };
 
@@ -81,7 +84,11 @@ const onPlayerStateChange = async (event: {data: PlayerState}) => {
 const onSkip = () => {
   if (!isCurrentGuestAdmin.value || !currentRoom.value || !currentGuest.value) return;
 
-  RoomService.nextSong(currentRoom.value.id, currentGuest.value.token);
+  try {
+    RoomService.nextSong(currentRoom.value.id, currentGuest.value.token);
+  } catch (e) {
+    $toast.error("Oops, something went wrong. Please try again later.")
+  }
 }
 
 watch(isCurrentSongPaused, () => {

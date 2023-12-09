@@ -19,7 +19,7 @@ defineProps<{
   </div>
   <div v-else-if="hasFailedWhileLoading" class="h-full flex flex-col justify-center items-center">
     <Warning class="w-4/5 h-auto" />
-    <p class="mt-14 mb-3.5 text-base">Oh no, something went wrong !</p>
+    <p class="mt-14 mb-3.5 text-base">Oh no, we could not load the room list !</p>
     <Button @click="onRetry">Try again</Button>
   </div>
   <div v-else>

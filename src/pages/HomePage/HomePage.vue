@@ -11,6 +11,7 @@ import {useRoomStore} from "@/stores/room";
 import {storeToRefs} from "pinia";
 import {createRoomListEventSource} from "@/services/Api/ServiceSentEventService";
 import {MessageActions} from "@/types";
+import {useToast} from "vue-toast-notification";
 
 const roomList = ref<RoomPreview[]>([])
 const roomListIsLoading = ref<boolean>(true)
@@ -18,6 +19,7 @@ const hasRoomListFailedWhileLoading = ref<boolean>(false)
 const roomListEventSource = ref<EventSource>();
 const roomStore = useRoomStore();
 const { currentRoom, currentGuest } = storeToRefs(roomStore);
+const $toast = useToast();
 
 async function getRooms() {
   hasRoomListFailedWhileLoading.value = false
@@ -29,6 +31,7 @@ async function getRooms() {
   } catch (e) {
     hasRoomListFailedWhileLoading.value = true
     roomListIsLoading.value = false
+    $toast.error("Oops, something went wrong. Please try again later.")
   }
 }
 
@@ -39,8 +42,7 @@ async function createRoom() {
     currentGuest.value = createRoomResponse.host;
     await router.push({name: 'room', params: {id: createRoomResponse.id}})
   } catch (e) {
-    console.error(e)
-    // TODO display a popup for failed creation
+    $toast.error("Oops, something went wrong. Please try again later.")
   }
 }
 
@@ -55,7 +57,9 @@ function onCreateRoom(message: CreateRoomMessage): void
 }
 
 onMounted(() => {
-  getRooms();
+  getRooms().catch(e => {
+    $toast.error("Oops, we could not get the room list. Please refresh the page.")
+  });
 
   roomListEventSource.value = createRoomListEventSource();
   roomListEventSource.value.onmessage = (event) => {
