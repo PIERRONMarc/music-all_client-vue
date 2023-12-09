@@ -2,7 +2,7 @@
   <div>
     <RoomTemplate>
       <template v-slot:welcomeModal>
-        <WelcomeModal v-model="isWelcomeModalOpen" />
+        <WelcomeModal v-model:is-open="isWelcomeModalOpen" />
       </template>
       <template v-slot:loader>
         <PulseLoader v-if="isCurrentRoomLoading" />
