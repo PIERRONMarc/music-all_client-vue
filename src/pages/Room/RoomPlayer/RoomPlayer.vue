@@ -53,7 +53,7 @@
         <YoutubeIframe
             v-if="currentSong"
             ref="youtubePlayer"
-            class="absolute md:static right-0 -bottom-96 md:h-[204px] md:w-[345px] md:self-end md:ml-auto"
+            class="absolute md:static right-0 bottom-[20] h-[144px] w-[256px] md:-bottom-96  md:h-[204px] md:w-[345px] md:self-end md:ml-auto"
             :video-id="currentSong.url"
             @state-change="onPlayerStateChange"
             @ready="onReady"
