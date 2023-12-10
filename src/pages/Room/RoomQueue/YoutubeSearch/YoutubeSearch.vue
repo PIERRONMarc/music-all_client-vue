@@ -7,7 +7,7 @@
       </div>
       <input type="search" v-model="songUrl" id="search" class="block w-full p-4 pl-10 text-sm text-white rounded-lg bg-bg-alternative outline-0" placeholder="Paste a Youtube video or playlist URL" required>
       <button
-          class="text-white w-20 absolute right-2.5 bottom-2.5 font-medium rounded-lg text-sm px-4 py-2 bg-primary-color"
+          class="text-white w-20 absolute right-2.5 bottom-2.5 font-medium rounded-sm text-sm px-4 py-2 bg-primary-color"
           @click="onAddClick"
       >
         <PulseLoader v-if="isAddingSong" />
@@ -35,7 +35,7 @@ const roomStore = useRoomStore();
 const { currentRoom, currentGuest } = storeToRefs(roomStore);
 
 function onAddClick() {
-  if (!currentRoom.value || !currentGuest.value) return;
+  if (!currentRoom.value || !currentGuest.value || songUrl.value === "") return;
 
   props.onAddSong(songUrl.value, currentRoom.value.id, currentGuest.value.token);
   songUrl.value = "";
