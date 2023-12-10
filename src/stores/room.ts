@@ -8,6 +8,7 @@ export const useRoomStore = defineStore("room", () => {
     const currentGuest = ref<Guest|null>(null);
     const isCurrentGuestAdmin = computed(() => currentGuest.value && currentGuest.value.role === 'ADMIN');
     const isCurrentSongPaused = computed(() => !!(currentRoom.value?.currentSong && currentRoom.value.currentSong.isPaused));
+    const volume = ref<number>(50);
 
     const addSong = (song: Song) => {
         if (!currentRoom.value) return;
@@ -110,5 +111,6 @@ export const useRoomStore = defineStore("room", () => {
         deleteSong,
         getNextSong,
         getCurrentSong,
+        volume,
     };
 })
