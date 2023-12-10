@@ -15,7 +15,11 @@
             />
             <VolumeControl
                 v-else
-                class="w-4 h-4 fill-white cursor-pointer"
+                class="fill-white cursor-pointer"
+                :class="{
+                  'w-4 h-4': isCurrentGuestAdmin,
+                  'w-6 h-6': !isCurrentGuestAdmin
+                }"
                 @click="mute"
             />
             <transition
@@ -34,9 +38,9 @@
                 </div>
             </transition>
           </div>
-          <PlayIcon v-if="isCurrentSongPaused" class="fill-white w-10 h-10" @click="togglePlay"/>
-          <PauseCircleFilledIcon v-else class="fill-white w-10 h-10" @click="togglePlay"/>
-          <SkipNextIcon class="w-3 h-3 fill-white" @click="onSkip"/>
+          <PlayIcon v-if="isCurrentSongPaused && isCurrentGuestAdmin" class="fill-white w-10 h-10 cursor-pointer" @click="togglePlay"/>
+          <PauseCircleFilledIcon v-else-if="isCurrentGuestAdmin" class="fill-white w-10 h-10 cursor-pointer" @click="togglePlay"/>
+          <SkipNextIcon v-if="isCurrentGuestAdmin" class="w-3 h-3 fill-white cursor-pointer" @click="onSkip"/>
         </div>
         <div v-if="currentSong" class="flex flex-col overflow-hidden">
           <div class="truncate font-bold">
