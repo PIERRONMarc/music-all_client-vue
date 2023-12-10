@@ -63,9 +63,7 @@
               autoplay: 1,
             }"
         />
-    </div>
-    <div class="w-full border-b fixed bottom-0 border-[#BEBEC7] z-0"></div>
-    <div class="w-1/2 border-b fixed bottom-0 border-primary-color z-10"></div>
+      </div>
     </div>
   </div>
 </template>
