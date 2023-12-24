@@ -28,7 +28,7 @@
 
         <div class="w-1/6 flex flex-row items-center gap-1 justify-center">
             <AccessTime class="fill-white w-4 h-4" :class="{'fill-primary-color': isCurrentSong}" />
-            {{  Math.floor(lengthInSeconds / 60) }}:{{ lengthInSeconds % 60 }}
+            {{ length }}
         </div>
         <div class="w-1/6">
             <HightlightOff
@@ -45,6 +45,7 @@ import AccessTime from "@/components/icons/AccessTimeIcon.vue";
 import HightlightOff from "@/components/icons/HightlightOffIcon.vue";
 import playingStatus from "@/assets/lotties/playing-status.json";
 import * as LottiePlayer from "@lottiefiles/lottie-player";
+import {computed, toRefs} from "vue";
 
 const props = defineProps<{
     id: string,
@@ -54,6 +55,7 @@ const props = defineProps<{
     lengthInSeconds: number
     isCurrentSong: boolean
 }>();
+const { lengthInSeconds } = toRefs(props);
 const emit = defineEmits<{
   (event: "deleteSong", id: string): void;
 }>();
@@ -63,4 +65,23 @@ function onDeleteSong() {
     emit("deleteSong", props.id);
   }
 }
+
+const length = computed(() => {
+  let length = "";
+  const minutes = Math.floor(lengthInSeconds.value / 60);
+  if (minutes < 10) {
+    length += "0" + minutes + ":";
+  }  else {
+    length += minutes + ":";
+  }
+
+  const seconds = lengthInSeconds.value % 60;
+  if (seconds < 10) {
+    length += "0" + seconds;
+  }  else {
+    length += seconds;
+  }
+
+  return length;
+})
 </script>
