@@ -4,7 +4,7 @@
     <div class="mb-8" v-if="isCurrentGuestAdmin">
       <YoutubeSearch :on-add-song="onAddSong" :is-adding-song="isAddingSong" />
     </div>
-    <div class="max-h-[calc(100vh-24rem)] overflow-scroll">
+    <div class="max-h-[calc(100vh-24rem)] overflow-auto">
       <SongItem
           v-if="currentRoom && currentRoom.currentSong"
           :index="1"
