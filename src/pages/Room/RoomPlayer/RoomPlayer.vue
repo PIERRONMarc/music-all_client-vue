@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
 import PlayIcon from "@/components/icons/PlayIcon.vue";
-import {computed, ref, watch} from "vue";
+import {computed, nextTick, ref, watch} from "vue";
 import PauseCircleFilledIcon from "@/components/icons/PauseCircleFilledIcon.vue";
 import SkipNextIcon from "@/components/icons/SkipNextIcon.vue";
 import {useRoomStore} from "@/stores/room";
@@ -131,7 +131,7 @@ const onSkip = () => {
 
 const mute = () => {
   youtubePlayer.value?.instance.mute();
-  volume.value = 0;
+  volume.value = -1; // weird bug that does not update the slider UI if volume is set to 0 the first time mute is called
   isMuted.value = true;
 }
 
